@@ -1,0 +1,19 @@
+{
+  "colors": [
+    { "value": "do",         "label": "Đỏ",         "dot": "#ef4444" },
+    { "value": "xanh-duong", "label": "Xanh dương", "dot": "#3b82f6" },
+    { "value": "xanh-la",    "label": "Xanh lá",    "dot": "#22c55e" },
+    { "value": "den",        "label": "Đen",         "dot": "#374151" },
+    { "value": "trang",      "label": "Trắng",       "dot": "#e2e8f0" },
+    { "value": "vang",       "label": "Vàng",        "dot": "#eab308" },
+    { "value": "hong",       "label": "Hồng",        "dot": "#ec4899" },
+    { "value": "tim",        "label": "Tím",         "dot": "#a855f7" },
+    { "value": "cam",        "label": "Cam",         "dot": "#f97316" },
+    { "value": "trong-suot", "label": "Trong suốt",  "dot": "#94a3b8" }
+  ],
+  "combos": [
+    { "value": "base",        "label": "Base"        },
+    { "value": "custom-text", "label": "Custom Text" },
+    { "value": "full-design", "label": "Full Design" }
+  ]
+}

@@ -1,112 +1,189 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
-const slides = [
+const SLIDES = [
   {
-    tag: 'Custom-fit Mouthguard',
-    headline: 'Bảo vệ chuẩn xác.',
-    headline2: 'Thiết kế riêng cho bạn.',
-    sub: 'Scan 3D miễn phí · Ship toàn quốc · 2–3 ngày sản xuất',
-    cta: { label: 'Đặt hàng ngay', href: '/order' },
+    label: 'Custom-fit Mouthguard',
+    h1: 'Bảo vệ đỉnh cao.',
+    h1b: 'Cá nhân hóa hoàn toàn.',
+    sub: 'Từ scan 3D đến sản phẩm hoàn chỉnh trong 2–3 ngày làm việc.',
+    cta1: { label: 'Đặt hàng ngay', href: '/order' },
     cta2: { label: 'Xem sản phẩm', href: '/products' },
-    bg: 'from-[#0A1628] via-[#0F1F38] to-[#0A1628]',
-    accent: '#1CA6DF',
+    trust: 'Scan 3D miễn phí · Ship toàn quốc · 2–3 ngày sản xuất',
   },
   {
-    tag: '🎉 Khuyến mãi',
-    headline: 'Ưu đãi tháng này.',
-    headline2: 'Giảm 10% tất cả sản phẩm.',
-    sub: 'Áp dụng khi đặt qua Zalo hoặc Instagram · Hết 31/07',
-    cta: { label: 'Nhận ưu đãi ngay', href: '/order' },
-    cta2: null,
-    bg: 'from-[#0A1628] via-[#1a1020] to-[#0A1628]',
-    accent: '#f59e0b',
+    label: 'Guard & Protection PRO',
+    h1: 'Dành cho chiến binh.',
+    h1b: '3 lớp EVA — hấp thụ lực tối đa.',
+    sub: 'Boxing, Muay Thái, MMA — thiết kế full custom với hơn 10 màu tùy chọn.',
+    cta1: { label: 'Xem Guard PRO', href: '/products' },
+    cta2: { label: 'Đặt ngay', href: '/order' },
+    trust: 'Bảo hành fit 1 đổi 1 · Upper arch · Combat-grade EVA',
   },
   {
-    tag: 'Guard & Protection PRO',
-    headline: 'Dành cho combat sports.',
-    headline2: 'Boxing · MMA · Muay Thái.',
-    sub: '3 lớp EVA · Hơn 10 màu · Chế tác riêng theo hàm của bạn',
-    cta: { label: 'Khám phá PRO', href: '/products' },
-    cta2: { label: 'Xem gallery', href: '/gallery' },
-    bg: 'from-[#0A1628] via-[#081410] to-[#0A1628]',
-    accent: '#22c55e',
+    label: 'LIGHT & Comfort',
+    h1: 'Nhẹ nhàng hơn.',
+    h1b: 'Bảo vệ không kém.',
+    sub: 'Bóng rổ, bóng đá, gym — 2 lớp EVA mỏng, thoải mái suốt buổi tập.',
+    cta1: { label: 'Xem LIGHT', href: '/products' },
+    cta2: { label: 'Đặt ngay', href: '/order' },
+    trust: 'Trong suốt · Siêu nhẹ · Vừa vặn như đúc',
   },
 ]
 
+const INTERVAL = 5000
+
 export default function Hero() {
-  const [cur, setCur] = useState(0)
+  const [idx, setIdx] = useState(0)
+  const [entered, setEntered] = useState(false)
+  const [textIn, setTextIn] = useState(true)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  // Entrance animation on mount
+  useEffect(() => {
+    const t = setTimeout(() => setEntered(true), 80)
+    return () => clearTimeout(t)
+  }, [])
+
+  // Auto-advance slides
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      setTextIn(false)
+      setTimeout(() => {
+        setIdx(i => (i + 1) % SLIDES.length)
+        setTextIn(true)
+      }, 350)
+    }, INTERVAL)
+  }, [])
 
   useEffect(() => {
-    const t = setTimeout(() => setCur((c) => (c + 1) % slides.length), 5000)
-    return () => clearTimeout(t)
-  }, [cur])
+    resetTimer()
+    return () => { if (timerRef.current) clearInterval(timerRef.current) }
+  }, [resetTimer])
 
-  const slide = slides[cur]
+  const goTo = (next: number) => {
+    if (next === idx) return
+    setTextIn(false)
+    setTimeout(() => {
+      setIdx(next)
+      setTextIn(true)
+    }, 300)
+    resetTimer()
+  }
+
+  const slide = SLIDES[idx]
+
+  const enter: React.CSSProperties = {
+    opacity: entered ? 1 : 0,
+    transform: entered ? 'translateY(0)' : 'translateY(20px)',
+    transition: 'opacity 800ms ease, transform 800ms ease',
+  }
+
+  const textFade: React.CSSProperties = {
+    opacity: textIn ? 1 : 0,
+    transform: textIn ? 'translateY(0)' : 'translateY(10px)',
+    transition: 'opacity 350ms ease, transform 350ms ease',
+  }
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+    <section className="relative w-full min-h-screen overflow-hidden bg-[#0A1628]">
 
-      {/* Background */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${slide.bg} transition-all duration-700`} />
-
-      {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-20">
-        <div className="max-w-2xl">
-
-          <span
-            className="inline-block text-xs font-bold px-3 py-1 rounded-full mb-6 border"
-            style={{ color: slide.accent, borderColor: slide.accent + '55', backgroundColor: slide.accent + '18' }}
-          >
-            {slide.tag}
-          </span>
-
-          <h1 className="font-heading font-black text-5xl md:text-7xl text-white leading-tight mb-2">
-            {slide.headline}
-          </h1>
-          <h1
-            className="font-heading font-black text-5xl md:text-7xl leading-tight mb-6"
-            style={{ color: slide.accent }}
-          >
-            {slide.headline2}
-          </h1>
-
-          <p className="text-[#94A3B8] text-lg mb-10">{slide.sub}</p>
-
-          <div className="flex gap-4 flex-wrap">
-            <Link
-              href={slide.cta.href}
-              className="font-bold px-8 py-3 rounded-lg text-white transition-all hover:opacity-90 hover:scale-105"
-              style={{ backgroundColor: slide.accent }}
-            >
-              {slide.cta.label}
-            </Link>
-            {slide.cta2 && (
-              <Link
-                href={slide.cta2.href}
-                className="font-bold px-8 py-3 rounded-lg border text-[#F1F5F9] hover:bg-white/10 transition-all"
-                style={{ borderColor: slide.accent + '88' }}
-              >
-                {slide.cta2.label}
-              </Link>
-            )}
-          </div>
-        </div>
+      {/* Full-bleed background image */}
+      <div className="absolute inset-0" style={enter}>
+        <Image
+          src="/brand/hero-image.png"
+          alt="TGG Custom Mouthguard"
+          fill
+          className="object-cover object-center"
+          priority
+        />
+        {/* Diagonal scrim — dark left for text legibility, fades right */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(105deg, rgba(10,22,40,0.96) 0%, rgba(10,22,40,0.78) 38%, rgba(10,22,40,0.30) 65%, transparent 100%)',
+          }}
+        />
       </div>
 
-      {/* Slide dots */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-        {slides.map((_, i) => (
+      {/* Site container — text stays within max-w-6xl, image bleeds full */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-5 flex flex-col min-h-screen" style={enter}>
+
+        {/* Text block — left aligned, top */}
+        <div className="flex flex-col gap-5 pt-36 max-w-lg">
+
+          {/* Slide label */}
+          <span
+            className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#60C8F3]"
+            style={textFade}
+          >
+            {slide.label}
+          </span>
+
+          {/* Headline */}
+          <div style={textFade}>
+            <h1 className="font-heading font-black text-5xl md:text-6xl text-white leading-tight">
+              {slide.h1}
+            </h1>
+            <h1 className="font-heading font-black text-5xl md:text-6xl text-[#1CA6DF] leading-tight">
+              {slide.h1b}
+            </h1>
+          </div>
+
+          {/* Sub */}
+          <p className="text-[#CBD5E1] text-sm leading-relaxed max-w-sm" style={textFade}>
+            {slide.sub}
+          </p>
+
+          {/* CTAs */}
+          <div className="flex gap-3 flex-wrap" style={textFade}>
+            <Link
+              href={slide.cta1.href}
+              className="font-bold px-7 py-3 rounded-lg bg-[#1CA6DF] text-white hover:bg-[#1590C2] transition-all hover:scale-105"
+            >
+              {slide.cta1.label}
+            </Link>
+            <Link
+              href={slide.cta2.href}
+              className="font-bold px-7 py-3 rounded-lg border border-white/20 text-[#F1F5F9] hover:bg-white/10 transition-all"
+            >
+              {slide.cta2.label}
+            </Link>
+          </div>
+
+          {/* Trust signals */}
+          <p className="text-[#94A3B8] text-xs tracking-wide" style={textFade}>
+            {slide.trust}
+          </p>
+        </div>
+
+      </div>
+
+      {/* Slide dot indicators — bottom center */}
+      <div
+        className="absolute bottom-10 left-0 right-0 z-10 flex justify-center items-center gap-2"
+        style={enter}
+      >
+        {SLIDES.map((_, i) => (
           <button
             key={i}
-            type="button"
+            onClick={() => goTo(i)}
             aria-label={`Slide ${i + 1}`}
-            onClick={() => setCur(i)}
-            className={`h-2 rounded-full transition-all ${
-              i === cur ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'
-            }`}
+            style={{
+              width: i === idx ? '28px' : '8px',
+              height: '8px',
+              borderRadius: '4px',
+              background: i === idx ? '#1CA6DF' : 'rgba(255,255,255,0.25)',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 400ms ease',
+              padding: 0,
+            }}
           />
         ))}
       </div>
