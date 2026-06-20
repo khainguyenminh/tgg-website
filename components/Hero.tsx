@@ -40,7 +40,9 @@ export default function Hero() {
   const [idx, setIdx] = useState(0)
   const [entered, setEntered] = useState(false)
   const [textIn, setTextIn] = useState(true)
+  const [paused, setPaused] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const reducedMotionRef = useRef(false)
 
   // Entrance animation on mount
   useEffect(() => {
@@ -48,9 +50,14 @@ export default function Hero() {
     return () => clearTimeout(t)
   }, [])
 
-  // Auto-advance slides
+  useEffect(() => {
+    reducedMotionRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }, [])
+
+  // Auto-advance slides — paused on hover/touch, skipped entirely for reduced motion
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current)
+    if (reducedMotionRef.current || paused) return
     timerRef.current = setInterval(() => {
       setTextIn(false)
       setTimeout(() => {
@@ -58,7 +65,7 @@ export default function Hero() {
         setTextIn(true)
       }, 350)
     }, INTERVAL)
-  }, [])
+  }, [paused])
 
   useEffect(() => {
     resetTimer()
@@ -90,7 +97,12 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden bg-[#0A1628]">
+    <section
+      className="relative w-full min-h-screen overflow-hidden bg-[#0A1628]"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+    >
 
       {/* Full-bleed background image */}
       <div className="absolute inset-0" style={enter}>

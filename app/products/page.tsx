@@ -103,8 +103,10 @@ const COMPARISON_ROWS = [
 
 function PackageCard({
   pkg,
+  line,
 }: {
   pkg: (typeof LIGHT_PACKAGES)[0]
+  line: Tab
 }) {
   return (
     <div
@@ -116,7 +118,7 @@ function PackageCard({
     >
       {pkg.highlight && (
         <span className="absolute -top-3 left-6 bg-[#1CA6DF] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-          Phổ biến nhất
+          Khuyên dùng
         </span>
       )}
 
@@ -138,10 +140,8 @@ function PackageCard({
         ))}
       </ul>
 
-      <a
-        href="https://zalo.me/0975580253"
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href={`/order?line=${line}&pkg=${pkg.id}#order-form`}
         className={`w-full text-center font-bold py-3 rounded-xl transition-all text-sm ${
           pkg.highlight
             ? 'bg-[#1CA6DF] hover:bg-[#1590C2] text-white'
@@ -149,7 +149,7 @@ function PackageCard({
         }`}
       >
         Đặt gói này
-      </a>
+      </Link>
     </div>
   )
 }
@@ -254,7 +254,7 @@ export default function ProductsPage() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {PRO_PACKAGES.map((pkg) => (
-                <PackageCard key={pkg.id} pkg={pkg} />
+                <PackageCard key={pkg.id} pkg={pkg} line="pro" />
               ))}
             </div>
           </div>
@@ -308,7 +308,7 @@ export default function ProductsPage() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {LIGHT_PACKAGES.map((pkg) => (
-                <PackageCard key={pkg.id} pkg={pkg} />
+                <PackageCard key={pkg.id} pkg={pkg} line="light" />
               ))}
             </div>
           </div>
@@ -361,35 +361,33 @@ export default function ProductsPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative overflow-hidden py-20 px-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0F1F38] via-[#0A1628] to-[#0F1F38]" />
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[500px] h-[250px] bg-[#1CA6DF]/10 rounded-full blur-[100px]" />
-        </div>
-        <div className="relative z-10 max-w-2xl mx-auto text-center">
-          <h2 className="font-heading font-black text-3xl md:text-5xl text-white mb-4">
-            Chưa biết chọn gói nào?
-          </h2>
-          <p className="text-[#94A3B8] mb-8">
-            Nhắn Zalo — TGG tư vấn miễn phí và giúp bạn chọn đúng ngay từ đầu.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <section className="py-20 px-6">
+        <div className="max-w-4xl mx-auto rounded-2xl border border-[#1E3350] bg-[#152035] p-10 md:p-12 grid md:grid-cols-[1.2fr_auto] gap-8 items-center">
+          <div>
+            <h2 className="font-heading font-black text-2xl md:text-3xl text-white mb-2">
+              Chưa biết chọn gói nào?
+            </h2>
+            <p className="text-[#94A3B8] text-sm">
+              Nhắn Zalo — TGG tư vấn miễn phí và giúp bạn chọn đúng ngay từ đầu, dựa trên môn thể thao và nhu cầu cá nhân hóa của bạn.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 md:flex-col">
             <a
               href="https://zalo.me/0975580253"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold px-8 py-4 rounded-xl transition-all text-lg"
+              className="inline-flex items-center justify-center gap-2 bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold px-6 py-3 rounded-xl transition-all text-sm whitespace-nowrap"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.09-1.35A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.66 0-3.22-.46-4.54-1.26l-.32-.19-3.02.8.81-2.96-.21-.34A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z" />
               </svg>
               Tư vấn qua Zalo
             </a>
             <Link
-              href="/gallery"
-              className="inline-flex items-center justify-center gap-2 border-2 border-[#1CA6DF] text-[#1CA6DF] hover:bg-[#1CA6DF] hover:text-white font-bold px-8 py-4 rounded-xl transition-all text-lg"
+              href="/order"
+              className="inline-flex items-center justify-center gap-2 border border-[#1CA6DF] text-[#1CA6DF] hover:bg-[#1CA6DF] hover:text-white font-bold px-6 py-3 rounded-xl transition-all text-sm whitespace-nowrap"
             >
-              Xem gallery
+              Đặt hàng online
             </Link>
           </div>
         </div>

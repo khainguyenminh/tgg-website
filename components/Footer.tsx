@@ -127,7 +127,8 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-[#1E3350] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#94A3B8]/60">
-          <p>© 2025 The Guard Guy. All rights reserved.</p>
+          {/* Safe without 'use client': every page importing Footer is itself a client component */}
+          <p>© {new Date().getFullYear()} The Guard Guy. All rights reserved.</p>
           <p>
             Made in Vietnam by{' '}
             <span className="text-[#94A3B8]">Khai Nguyên Dental Lab</span>

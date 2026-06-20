@@ -218,5 +218,13 @@
   "55": {
     "color": "trong-suot",
     "combo": "custom-text"
+  },
+  "57": {
+    "color": "xanh-la",
+    "combo": "custom-text"
+  },
+  "59": {
+    "color": "den",
+    "combo": "full-design"
   }
 }

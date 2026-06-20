@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
@@ -85,8 +85,9 @@ export default function GalleryPage() {
   const [activeCombo, setActiveCombo]     = useState<string | null>(null)
   const [lightbox, setLightbox]           = useState<LightboxState | null>(null)
 
-  // ── Fetch từ Cloudinary API ───────────────────────────────────────────────
-  useEffect(() => {
+  const loadGallery = () => {
+    setLoading(true)
+    setError(false)
     fetch('/api/gallery')
       .then(r => r.json())
       .then(data => {
@@ -98,6 +99,10 @@ export default function GalleryPage() {
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadGallery()
   }, [])
 
   // ── Filter logic ──────────────────────────────────────────────────────────
@@ -120,6 +125,28 @@ export default function GalleryPage() {
     if (!lightbox) return
     setLightbox({ ...lightbox, index: (lightbox.index + 1) % lightbox.group.images.length })
   }
+
+  // ── Keyboard control for lightbox ────────────────────────────────────────
+  // Listener attaches only when the lightbox opens/closes, not on every
+  // index change — handlers read the latest state via refs.
+  const closeRef = useRef(closeLightbox)
+  const prevRef  = useRef(lightboxPrev)
+  const nextRef  = useRef(lightboxNext)
+  closeRef.current = closeLightbox
+  prevRef.current  = lightboxPrev
+  nextRef.current  = lightboxNext
+
+  const isOpen = lightbox !== null
+  useEffect(() => {
+    if (!isOpen) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeRef.current()
+      if (e.key === 'ArrowLeft') prevRef.current()
+      if (e.key === 'ArrowRight') nextRef.current()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isOpen])
 
   return (
     <>
@@ -236,7 +263,13 @@ export default function GalleryPage() {
           {/* ── Error ── */}
           {error && (
             <div className="text-center py-24 text-[#94A3B8]">
-              Không tải được gallery. Vui lòng thử lại sau.
+              <p className="mb-4">Không tải được gallery. Vui lòng thử lại.</p>
+              <button
+                onClick={loadGallery}
+                className="inline-block border border-[#1CA6DF] text-[#1CA6DF] hover:bg-[#1CA6DF] hover:text-white font-bold px-6 py-2.5 rounded-xl transition-all"
+              >
+                Thử lại
+              </button>
             </div>
           )}
 
@@ -244,7 +277,13 @@ export default function GalleryPage() {
           {!loading && !error && (
             filtered.length === 0 ? (
               <div className="text-center py-24 text-[#94A3B8]">
-                Không có thiết kế phù hợp với bộ lọc này.
+                <p className="mb-4">Không có thiết kế phù hợp với bộ lọc này.</p>
+                <button
+                  onClick={() => { setActiveColor(null); setActiveCombo(null) }}
+                  className="text-[#1CA6DF] hover:underline font-semibold"
+                >
+                  Xoá bộ lọc để xem tất cả
+                </button>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

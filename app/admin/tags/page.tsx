@@ -82,6 +82,7 @@ export default function AdminTagsPage() {
   // ── Drag-to-group state ───────────────────────────────────────────────────
   const dragging  = useRef<{ img: GalleryImage; fromGroupId: string } | null>(null)
   const [dragOverId, setDragOverId] = useState<string | null>(null)
+  const [dragOverThumb, setDragOverThumb] = useState<{ groupId: string; index: number } | null>(null)
 
   // ── Load ──────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -122,17 +123,63 @@ export default function AdminTagsPage() {
     setDragOverId(null)
     const d = dragging.current
     if (!d || d.fromGroupId === targetGroupId) return
-    setGroups(prev => prev.map(g => {
-      if (g.groupId === d.fromGroupId)
-        return { ...g, images: g.images.filter(i => i.public_id !== d.img.public_id), dirtyGroup: true }
-      if (g.groupId === targetGroupId)
-        return { ...g, images: [...g.images, d.img], dirtyGroup: true }
-      return g
-    }))
+    setGroups(prev => {
+      const moved = prev
+        .map(g => {
+          if (g.groupId === d.fromGroupId)
+            return { ...g, images: g.images.filter(i => i.public_id !== d.img.public_id), dirtyGroup: true }
+          if (g.groupId === targetGroupId)
+            return { ...g, images: [...g.images, d.img], dirtyGroup: true }
+          return g
+        })
+        // Nhóm trống sau khi kéo thì tự xoá
+        .filter(g => g.images.length > 0)
+
+      // Đổi tên lại STT các nhóm liên tục (1, 2, 3, ...) theo thứ tự hiện tại
+      return moved.map((g, idx) => {
+        const newId = String(idx + 1)
+        if (newId === g.groupId) return g
+        return {
+          ...g,
+          groupId: newId,
+          dirtyGroup: true,
+          images: g.images.map(img => ({
+            ...img,
+            tags: img.tags.map(t => t.startsWith('group-') ? `group-${newId}` : t),
+          })),
+        }
+      })
+    })
     dragging.current = null
     setSaved(false)
   }
-  function onDragEnd() { dragging.current = null; setDragOverId(null) }
+  function onDragEnd() { dragging.current = null; setDragOverId(null); setDragOverThumb(null) }
+
+  // ── Reorder ảnh trong cùng 1 nhóm (kéo thumbnail) ───────────────────────────
+  function onThumbDragOver(e: React.DragEvent, groupId: string, index: number) {
+    if (dragging.current?.fromGroupId !== groupId) return
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOverThumb({ groupId, index })
+  }
+  function onThumbDrop(e: React.DragEvent, groupId: string, index: number) {
+    const d = dragging.current
+    if (!d || d.fromGroupId !== groupId) return
+    e.preventDefault()
+    e.stopPropagation()
+    setGroups(prev => prev.map(g => {
+      if (g.groupId !== groupId) return g
+      const imgs    = [...g.images]
+      const fromIdx = imgs.findIndex(im => im.public_id === d.img.public_id)
+      if (fromIdx === -1 || fromIdx === index) return g
+      imgs.splice(fromIdx, 1)
+      imgs.splice(fromIdx < index ? index - 1 : index, 0, d.img)
+      return { ...g, images: imgs, dirtyGroup: true }
+    }))
+    dragging.current = null
+    setDragOverThumb(null)
+    setSaved(false)
+  }
 
   // ── Upload: drop files into upload zone ───────────────────────────────────
   const handleUploadDrop = useCallback(async (files: FileList | null) => {
@@ -566,7 +613,15 @@ export default function AdminTagsPage() {
                 >
                   {/* Main image */}
                   {activeImg && (
-                    <div style={{ position: 'relative', aspectRatio: '1', background: '#0f172a' }}>
+                    <div
+                      draggable={!deleteMode}
+                      onDragStart={() => !deleteMode && onDragStart(activeImg, group.groupId)}
+                      onDragEnd={onDragEnd}
+                      style={{
+                        position: 'relative', aspectRatio: '1', background: '#0f172a',
+                        cursor: deleteMode ? 'default' : 'grab',
+                      }}
+                    >
                       <Image
                         src={activeImg.secure_url}
                         alt={`Group ${group.groupId}`}
@@ -601,14 +656,21 @@ export default function AdminTagsPage() {
                         draggable={!deleteMode}
                         onDragStart={() => !deleteMode && onDragStart(img, group.groupId)}
                         onDragEnd={onDragEnd}
+                        onDragOver={e => !deleteMode && onThumbDragOver(e, group.groupId, i)}
+                        onDrop={e => !deleteMode && onThumbDrop(e, group.groupId, i)}
                         onClick={() => !deleteMode && setActiveThumb(p => ({ ...p, [group.groupId]: i }))}
-                        title={deleteMode ? 'Bấm để xoá ảnh này' : 'Kéo sang group khác'}
+                        title={deleteMode ? 'Bấm để xoá ảnh này' : 'Kéo để đổi thứ tự / sang group khác'}
                         style={{
                           width: 36, height: 36, borderRadius: 4, overflow: 'hidden',
-                          border: `1px solid ${deleteMode ? '#ef444466' : i === thumbIdx ? '#1CA6DF' : '#334155'}`,
+                          border: `1px solid ${
+                            deleteMode ? '#ef444466'
+                            : dragOverThumb?.groupId === group.groupId && dragOverThumb.index === i ? '#22d3ee'
+                            : i === thumbIdx ? '#1CA6DF' : '#334155'
+                          }`,
                           padding: 0, cursor: deleteMode ? 'pointer' : 'grab',
                           position: 'relative', background: '#0f172a',
                           opacity: i === thumbIdx ? 1 : 0.5, flexShrink: 0,
+                          boxShadow: dragOverThumb?.groupId === group.groupId && dragOverThumb.index === i ? '0 0 0 2px #22d3ee66' : 'none',
                         }}
                       >
                         <Image src={img.secure_url} alt="" fill style={{ objectFit: 'cover' }} sizes="36px" unoptimized />

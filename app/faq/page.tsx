@@ -251,9 +251,9 @@ export default function FAQPage() {
       </section>
 
       {/* ── Still have questions ── */}
-      <section className="bg-[#0F1F38] py-16 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="font-heading font-black text-3xl text-white mb-3">
+      <section className="py-16 px-6">
+        <div className="max-w-2xl mx-auto rounded-2xl border border-[#1E3350] bg-[#152035] p-8 sm:p-10 text-center">
+          <h2 className="font-heading font-black text-2xl sm:text-3xl text-white mb-3">
             Chưa tìm được câu trả lời?
           </h2>
           <p className="text-[#94A3B8] mb-8">
