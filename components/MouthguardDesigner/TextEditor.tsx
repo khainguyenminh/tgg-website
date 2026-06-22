@@ -139,9 +139,10 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
             onAdd({ text, fontFamily, fontSize, fill, bold, italic })
             setText('')
           }}
-          className="w-full bg-[#1CA6DF] hover:bg-[#1590C2] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-sm rounded-lg px-4 py-2.5 transition-all"
+          className="w-full bg-[#1CA6DF] hover:bg-[#1590C2] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-sm rounded-lg px-4 py-2.5 transition-all leading-tight"
         >
-          Thêm vào thiết kế / Add to Design
+          <span className="block">Thêm vào thiết kế</span>
+          <span className="block text-xs font-normal opacity-80">Add to Design</span>
         </button>
       )}
     </div>
