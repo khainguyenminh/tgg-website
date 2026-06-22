@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { label: 'Sản phẩm', href: '/products' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'Quy trình', href: '/order' },
+  { label: 'Tự thiết kế', href: '/customize' },
   { label: 'FAQ', href: '/faq' },
 ]
 

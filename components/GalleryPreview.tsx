@@ -19,9 +19,6 @@ export default function GalleryPreview() {
           <h2 className="font-heading font-black text-4xl md:text-5xl text-white mt-3 mb-4">
             Mỗi chiếc là độc nhất
           </h2>
-          <p className="text-[#94A3B8] max-w-lg mx-auto text-sm">
-            {productGroups.length} thiết kế đã hoàn thành — mỗi sản phẩm chụp nhiều góc thực tế.
-          </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-10">
@@ -71,14 +68,11 @@ export default function GalleryPreview() {
         </div>
 
         <div className="text-center">
-          <p className="text-[#94A3B8] text-sm mb-5">
-            Đang hiển thị 8/{productGroups.length} thiết kế
-          </p>
           <Link
             href="/gallery"
             className="inline-block border border-[#1CA6DF] text-[#1CA6DF] hover:bg-[#1CA6DF] hover:text-white font-bold px-10 py-3 rounded-xl transition-all"
           >
-            Xem toàn bộ {productGroups.length} thiết kế →
+            Xem thêm →
           </Link>
         </div>
 
