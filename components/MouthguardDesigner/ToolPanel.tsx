@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import ColorPicker from './ColorPicker'
 import ImageUploader from './ImageUploader'
 import TextEditor from './TextEditor'
@@ -60,6 +60,72 @@ export default function ToolPanel({
   const hasLayerSelection = state.selectedId !== null
   const [draggedId, setDraggedId] = useState<string | null>(null)
   const [dragOverId, setDragOverId] = useState<string | null>(null)
+  const thumbRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const dragStateRef = useRef<{
+    pointerId: number
+    startX: number
+    startY: number
+    draggingId: string
+    isDragging: boolean
+  } | null>(null)
+
+  const DRAG_THRESHOLD_PX = 6
+
+  function handleThumbPointerDown(e: React.PointerEvent<HTMLDivElement>, id: string) {
+    dragStateRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      draggingId: id,
+      isDragging: false,
+    }
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {
+      // pointer may not be active (e.g. synthetic events) — drag still works via document-level move/up
+    }
+  }
+
+  function handleThumbPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    const drag = dragStateRef.current
+    if (!drag || e.pointerId !== drag.pointerId) return
+
+    if (!drag.isDragging) {
+      const dx = e.clientX - drag.startX
+      const dy = e.clientY - drag.startY
+      if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return
+      drag.isDragging = true
+      setDraggedId(drag.draggingId)
+    }
+
+    e.preventDefault()
+    let hoveredId: string | null = null
+    for (const [id, el] of Object.entries(thumbRefs.current)) {
+      if (!el || id === drag.draggingId) continue
+      const rect = el.getBoundingClientRect()
+      if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        hoveredId = id
+        break
+      }
+    }
+    setDragOverId((prev) => (prev === hoveredId ? prev : hoveredId))
+  }
+
+  function endThumbDrag(e: React.PointerEvent<HTMLDivElement>, commit: boolean) {
+    const drag = dragStateRef.current
+    if (!drag || e.pointerId !== drag.pointerId) return
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    } catch {
+      // capture may already be released by the browser
+    }
+    if (commit && drag.isDragging && dragOverId && dragOverId !== drag.draggingId) {
+      onReorderLayer(drag.draggingId, dragOverId)
+    }
+    dragStateRef.current = null
+    setDraggedId(null)
+    setDragOverId(null)
+  }
 
   return (
     <div className="space-y-4 w-full lg:w-[280px] flex-shrink-0">
@@ -77,23 +143,15 @@ export default function ToolPanel({
               .map((img) => (
                 <div
                   key={img.id}
+                  ref={(el) => {
+                    thumbRefs.current[img.id] = el
+                  }}
                   className="relative cursor-grab active:cursor-grabbing"
-                  draggable
-                  onDragStart={() => setDraggedId(img.id)}
-                  onDragEnd={() => {
-                    setDraggedId(null)
-                    setDragOverId(null)
-                  }}
-                  onDragOver={(e) => {
-                    e.preventDefault()
-                    setDragOverId(img.id)
-                  }}
-                  onDrop={(e) => {
-                    e.preventDefault()
-                    if (draggedId) onReorderLayer(draggedId, img.id)
-                    setDraggedId(null)
-                    setDragOverId(null)
-                  }}
+                  style={{ touchAction: 'none' }}
+                  onPointerDown={(e) => handleThumbPointerDown(e, img.id)}
+                  onPointerMove={handleThumbPointerMove}
+                  onPointerUp={(e) => endThumbDrag(e, true)}
+                  onPointerCancel={(e) => endThumbDrag(e, false)}
                 >
                   <button
                     type="button"

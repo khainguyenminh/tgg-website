@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Stage, Layer, Group, Rect, Image as KonvaImage, Text as KonvaText, Transformer } from 'react-konva'
 import type Konva from 'konva'
 import useImage from 'use-image'
@@ -29,6 +29,62 @@ function makeTintedSilhouette(image: HTMLImageElement, color: string): HTMLCanva
   ctx.fillStyle = color
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   return canvas
+}
+
+interface DesignTextProps {
+  textObj: TextObjectState
+  maxFontSize: number
+  nodeRef: (node: Konva.Text | null) => void
+  onSelect: () => void
+  onChange: (patch: Partial<TextObjectState>) => void
+}
+
+function DesignText({ textObj, maxFontSize, nodeRef, onSelect, onChange }: DesignTextProps) {
+  const localRef = useRef<Konva.Text | null>(null)
+
+  useLayoutEffect(() => {
+    const node = localRef.current
+    if (!node) return
+    node.offsetX(node.width() / 2)
+    node.offsetY(node.height() / 2)
+    node.getLayer()?.batchDraw()
+  }, [textObj.text, textObj.fontSize, textObj.fontFamily, textObj.bold, textObj.italic])
+
+  return (
+    <KonvaText
+      ref={(node) => {
+        localRef.current = node
+        nodeRef(node)
+      }}
+      text={textObj.text}
+      x={textObj.x}
+      y={textObj.y}
+      fontSize={textObj.fontSize}
+      fontFamily={textObj.fontFamily}
+      fontStyle={`${textObj.bold ? 'bold' : ''} ${textObj.italic ? 'italic' : ''}`.trim() || 'normal'}
+      fill={textObj.fill}
+      rotation={textObj.rotation}
+      draggable
+      onClick={onSelect}
+      onTap={onSelect}
+      onDragEnd={(e) => onChange({ x: e.target.x(), y: e.target.y() })}
+      onTransformEnd={(e) => {
+        const node = e.target as Konva.Text
+        const newSize = Math.round(Math.max(8, Math.min(textObj.fontSize * node.scaleX(), maxFontSize)))
+        node.scaleX(1)
+        node.scaleY(1)
+        node.fontSize(newSize)
+        node.offsetX(node.width() / 2)
+        node.offsetY(node.height() / 2)
+        onChange({
+          fontSize: newSize,
+          rotation: node.rotation(),
+          x: node.x(),
+          y: node.y(),
+        })
+      }}
+    />
+  )
 }
 
 interface DesignImageProps {
@@ -138,18 +194,25 @@ const DesignerCanvas = forwardRef<DesignerCanvasHandle, DesignerCanvasProps>(fun
   const { width, height } = size
   const scale = stageWidth / width
 
+  function handleStageDeselect(e: Konva.KonvaEventObject<MouseEvent | PointerEvent>) {
+    if (e.target === e.target.getStage()) onSelect(null)
+  }
+
   return (
-    <div ref={containerRef} className="mx-auto" style={{ width: '100%', maxWidth: width }}>
+    <div
+      ref={containerRef}
+      className="mx-auto"
+      style={{ width: '100%', maxWidth: width, touchAction: 'none' }}
+    >
       <Stage
         ref={stageRef}
         width={stageWidth}
         height={height * scale}
         scaleX={scale}
         scaleY={scale}
-        onMouseDown={(e) => {
-          if (e.target === e.target.getStage()) onSelect(null)
-        }}
-        style={{ filter: 'drop-shadow(0 8px 18px rgba(0,0,0,0.45))' }}
+        onMouseDown={handleStageDeselect}
+        onPointerDown={handleStageDeselect}
+        style={{ filter: 'drop-shadow(0 8px 18px rgba(0,0,0,0.45))', touchAction: 'none' }}
       >
         <Layer>
           {tintedOutline && (
@@ -195,36 +258,15 @@ const DesignerCanvas = forwardRef<DesignerCanvasHandle, DesignerCanvasProps>(fun
               const textObj = state.textObjects.find((t) => t.id === id)
               if (textObj) {
                 return (
-                  <KonvaText
+                  <DesignText
                     key={textObj.id}
-                    ref={(node) => {
+                    textObj={textObj}
+                    maxFontSize={height * 0.9}
+                    nodeRef={(node) => {
                       textNodeRefs.current[textObj.id] = node
                     }}
-                    text={textObj.text}
-                    x={textObj.x}
-                    y={textObj.y}
-                    fontSize={textObj.fontSize}
-                    fontFamily={textObj.fontFamily}
-                    fontStyle={`${textObj.bold ? 'bold' : ''} ${textObj.italic ? 'italic' : ''}`.trim() || 'normal'}
-                    fill={textObj.fill}
-                    rotation={textObj.rotation}
-                    offsetX={(textObj.text.length * textObj.fontSize) / 4}
-                    draggable
-                    onClick={() => onSelect(textObj.id)}
-                    onTap={() => onSelect(textObj.id)}
-                    onDragEnd={(e) => onTextChange(textObj.id, { x: e.target.x(), y: e.target.y() })}
-                    onTransformEnd={(e) => {
-                      const node = e.target as Konva.Text
-                      const newSize = Math.max(8, textObj.fontSize * node.scaleX())
-                      node.scaleX(1)
-                      node.scaleY(1)
-                      onTextChange(textObj.id, {
-                        fontSize: newSize,
-                        rotation: node.rotation(),
-                        x: node.x(),
-                        y: node.y(),
-                      })
-                    }}
+                    onSelect={() => onSelect(textObj.id)}
+                    onChange={(patch) => onTextChange(textObj.id, patch)}
                   />
                 )
               }

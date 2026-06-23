@@ -55,7 +55,7 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
         value={text}
         onChange={(e) => handleField('text', e.target.value)}
         placeholder="Nhập chữ... / Enter text..."
-        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-[#94A3B8] outline-none focus:border-[#1CA6DF]"
+        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-base text-white placeholder:text-[#94A3B8] outline-none focus:border-[#1CA6DF]"
       />
 
       <div>
@@ -63,7 +63,7 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
         <select
           value={fontFamily}
           onChange={(e) => handleField('fontFamily', e.target.value)}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#1CA6DF]"
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-base text-white outline-none focus:border-[#1CA6DF]"
         >
           {FONT_OPTIONS.map((f) => (
             <option key={f} value={f} className="bg-[#0F1F38]">
