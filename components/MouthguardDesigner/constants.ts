@@ -7,18 +7,22 @@ export interface ColorSwatch {
 }
 
 export const PRO_COLORS: ColorSwatch[] = [
-  { name: 'Đen', nameEn: 'Black', hex: '#111111' },
-  { name: 'Trắng', nameEn: 'White', hex: '#FFFFFF' },
-  { name: 'Đỏ', nameEn: 'Red', hex: '#D72638' },
-  { name: 'Xanh dương', nameEn: 'Blue', hex: '#1CA6DF' },
-  { name: 'Navy', nameEn: 'Navy', hex: '#0A1628' },
-  { name: 'Xanh lá', nameEn: 'Green', hex: '#2D9E4B' },
-  { name: 'Vàng', nameEn: 'Yellow', hex: '#F5C800' },
-  { name: 'Cam', nameEn: 'Orange', hex: '#F47820' },
-  { name: 'Hồng', nameEn: 'Pink', hex: '#E91E8C' },
-  { name: 'Tím', nameEn: 'Purple', hex: '#7B2FBE' },
-  { name: 'Vàng đồng', nameEn: 'Gold', hex: '#C9A84C' },
-  { name: 'Bạc', nameEn: 'Silver', hex: '#A8A9AD' },
+  { name: 'Xám titan', nameEn: 'Titanium grey', hex: '#696969' },
+  { name: 'Tím bão đêm', nameEn: 'Midnight storm', hex: '#1A0187' },
+  { name: 'Xanh điện biển', nameEn: 'Ocean volt', hex: '#0071CD' },
+  { name: 'Xanh hoàng gia', nameEn: 'Royal blue', hex: '#0032A5' },
+  { name: 'Xanh ngọc lam', nameEn: 'Teal reef', hex: '#0094AF' },
+  { name: 'Nâu cacao', nameEn: 'Cocoa brown', hex: '#4C2E2B' },
+  { name: 'Bạc hà băng', nameEn: 'Frost mint', hex: '#CEE3EA' },
+  { name: 'Đỏ mận rượu', nameEn: 'Wine berry', hex: '#6C1344' },
+  { name: 'Tím huyền bí', nameEn: 'Mystic plum', hex: '#552151' },
+  { name: 'Đỏ huyết long', nameEn: 'Dragon blood', hex: '#520720' },
+  { name: 'Cam lửa cháy', nameEn: 'Blaze orange', hex: '#FF6C00' },
+  { name: 'Vàng tia chớp', nameEn: 'Lightning yellow', hex: '#FFC000' },
+  { name: 'Đỏ chiến binh', nameEn: 'Warrior red', hex: '#B91F38' },
+  { name: 'Đen bóng đêm', nameEn: 'Shadow black', hex: '#000000' },
+  { name: 'Xanh rừng sâu', nameEn: 'Deep forest', hex: '#00693D' },
+  { name: 'Xanh lá chiến thắng', nameEn: 'Victory green', hex: '#007A22' },
 ]
 
 export const LIGHT_COLORS: ColorSwatch[] = [
