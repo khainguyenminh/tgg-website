@@ -18,7 +18,7 @@ const SLIDES = [
     label: 'Guard & Protection PRO',
     h1: 'Dành cho chiến binh.',
     h1b: '3 lớp EVA — hấp thụ lực tối đa.',
-    sub: 'Boxing, Muay Thái, MMA — thiết kế full custom với hơn 10 màu tùy chọn.',
+    sub: 'Boxing, Muay Thái, MMA — thiết kế full custom với 16 màu tùy chọn.',
     cta1: { label: 'Xem Guard PRO', href: '/products' },
     cta2: { label: 'Đặt ngay', href: '/order' },
     trust: 'Bảo hành fit 1 đổi 1 · Upper arch · Combat-grade EVA',

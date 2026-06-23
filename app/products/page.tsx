@@ -57,7 +57,7 @@ const PRO_PACKAGES = [
       'Scan 3D miễn phí',
       'Vật liệu EVA chắc, dẻo 3 lớp',
       'Sản xuất riêng theo khuôn răng',
-      '7+ màu lựa chọn',
+      '16 màu lựa chọn',
     ],
   },
   {
@@ -90,7 +90,7 @@ const COMPARISON_ROWS = [
   { label: 'Cấu tạo', light: '2 lớp EVA mỏng', pro: '3 lớp EVA dày' },
   { label: 'Mức bảo vệ', light: 'Tiêu chuẩn', pro: 'Tối đa' },
   { label: 'Phù hợp cho', light: 'Thể thao không đối kháng', pro: 'Combat sports' },
-  { label: 'Màu sắc', light: 'Trong suốt (1 màu)', pro: 'Hơn 10 màu' },
+  { label: 'Màu sắc', light: 'Trong suốt (1 màu)', pro: '16 màu' },
   { label: 'Cá nhân hóa', light: '✓ Có gói Custom', pro: '✓ Có gói Custom' },
   { label: 'Hàm', light: 'Upper (hàm trên)', pro: 'Upper (hàm trên)' },
   { label: 'Scan 3D', light: '✓ Miễn phí', pro: '✓ Miễn phí' },
@@ -217,7 +217,7 @@ export default function ProductsPage() {
               </h2>
               <p className="text-[#94A3B8] max-w-2xl mx-auto">
                 Dành cho combat sports. 3 lớp EVA dày — chịu được lực tác động trực tiếp từ nắm đấm và đòn đá.
-                Hơn 10 màu, cá nhân hóa tự do.
+                16 màu, cá nhân hóa tự do.
               </p>
             </div>
 
@@ -235,7 +235,7 @@ export default function ProductsPage() {
               {[
                 { icon: '🛡️', title: 'Bảo vệ tối đa', desc: '3 lớp EVA dày hấp thụ lực va chạm hiệu quả khi thi đấu' },
                 { icon: '🔒', title: 'Không bao giờ tuột', desc: 'Custom-fit theo khuôn răng — giữ chắc kể cả khi chịu cú đấm bất ngờ' },
-                { icon: '🎨', title: 'Hơn 10 màu', desc: 'Thể hiện cá tính hoặc màu đồng phục đội — không còn máng trắng nhàm chán' },
+                { icon: '🎨', title: '16 màu', desc: 'Thể hiện cá tính hoặc màu đồng phục đội — không còn máng trắng nhàm chán' },
                 { icon: '✍️', title: 'Cá nhân hóa tự do', desc: 'Tên, số, logo, artwork theo yêu cầu — giao design preview trước khi sản xuất' },
               ].map((item) => (
                 <div key={item.title} className="flex gap-4 p-5 bg-[#152035] border border-[#1E3350] rounded-xl">

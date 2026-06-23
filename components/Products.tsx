@@ -1,12 +1,11 @@
 import Link from 'next/link'
+import { PRO_COLORS } from './MouthguardDesigner/constants'
 
 const tiers = [
   { name: 'BASE',         desc: 'Trong suốt, không in ấn',   light: '1.400.000đ', pro: '1.800.000đ' },
   { name: 'Custom Text',  desc: 'Thêm tên hoặc số',          light: '1.500.000đ', pro: '1.900.000đ' },
   { name: 'Fully Design', desc: 'Thiết kế hoàn toàn theo ý', light: '1.600.000đ', pro: '2.000.000đ' },
 ]
-
-const proColors = ['#1CA6DF','#ef4444','#22c55e','#f59e0b','#8b5cf6','#ec4899','#f97316','#F1F5F9','#1a1a2e','#64748b']
 
 export default function Products() {
   return (
@@ -94,13 +93,14 @@ export default function Products() {
 
             {/* Color swatches */}
             <div className="mb-6">
-              <p className="text-[#94A3B8] text-xs mb-2">10+ màu lựa chọn</p>
+              <p className="text-[#94A3B8] text-xs mb-2">{PRO_COLORS.length} màu lựa chọn</p>
               <div className="flex gap-2 flex-wrap">
-                {proColors.map((color) => (
+                {PRO_COLORS.map((color) => (
                   <div
-                    key={color}
+                    key={color.hex}
+                    title={`${color.name} / ${color.nameEn}`}
                     className="w-5 h-5 rounded-full border border-white/10"
-                    style={{ backgroundColor: color }}
+                    style={{ backgroundColor: color.hex }}
                   />
                 ))}
               </div>

@@ -15,7 +15,7 @@ const categories = [
     faqs: [
       {
         q: 'LIGHT và PRO khác nhau thế nào?',
-        a: 'LIGHT cấu tạo 2 lớp EVA mỏng, nhẹ, chỉ có màu trong suốt — phù hợp cho các môn thể thao không đối kháng như bóng rổ, bóng đá, gym. PRO cấu tạo 3 lớp EVA dày hơn, bảo vệ tối đa, có hơn 10 màu — phù hợp cho combat sports như boxing, Muay Thái, MMA. Cả hai đều custom-fit hoàn toàn theo răng của bạn.',
+        a: 'LIGHT cấu tạo 2 lớp EVA mỏng, nhẹ, chỉ có màu trong suốt — phù hợp cho các môn thể thao không đối kháng như bóng rổ, bóng đá, gym. PRO cấu tạo 3 lớp EVA dày hơn, bảo vệ tối đa, có 16 màu — phù hợp cho combat sports như boxing, Muay Thái, MMA. Cả hai đều custom-fit hoàn toàn theo răng của bạn.',
       },
       {
         q: 'Tại sao nên dùng custom-fit thay vì mua máng đại trà ở tiệm thể thao?',
@@ -88,7 +88,7 @@ const categories = [
       },
       {
         q: 'Có bao nhiêu màu để chọn?',
-        a: 'Dòng LIGHT chỉ có 1 màu: trong suốt. Dòng PRO có hơn 10 màu để lựa chọn. Liên hệ TGG để xem bảng màu đầy đủ.',
+        a: 'Dòng LIGHT chỉ có 1 màu: trong suốt. Dòng PRO có 16 màu để lựa chọn. Liên hệ TGG để xem bảng màu đầy đủ.',
       },
       {
         q: 'Tôi có thể mang file thiết kế sẵn không?',
