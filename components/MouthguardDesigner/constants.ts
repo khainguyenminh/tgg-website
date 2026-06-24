@@ -29,7 +29,22 @@ export const LIGHT_COLORS: ColorSwatch[] = [
   { name: 'Trong suốt', nameEn: 'Clear', hex: '#FFFFFF' },
 ]
 
-export const FONT_OPTIONS = ['Be Vietnam Pro', 'Arial', 'Impact', 'Barlow Condensed']
+export const FONT_OPTIONS = [
+  'Naserra',
+  'Noxis',
+  'Tallings',
+  'Hello Farmer',
+  'Longevity',
+  'Pizza Hut',
+  'Race Sport',
+  'Sakana',
+  'Tackerlen',
+  'Vanily',
+  'Ethnocentric',
+  'Neusharp Italic',
+  'Batman Forever',
+  'Deneane',
+]
 
 export const TEXT_PRESET_COLORS = [
   '#FFFFFF',

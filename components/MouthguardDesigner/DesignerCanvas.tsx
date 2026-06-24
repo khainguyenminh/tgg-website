@@ -50,6 +50,17 @@ function DesignText({ textObj, maxFontSize, nodeRef, onSelect, onChange }: Desig
     node.getLayer()?.batchDraw()
   }, [textObj.text, textObj.fontSize, textObj.fontFamily, textObj.bold, textObj.italic])
 
+  useEffect(() => {
+    if (typeof document === 'undefined' || !('fonts' in document)) return
+    document.fonts.load(`${textObj.fontSize}px "${textObj.fontFamily}"`).then(() => {
+      const node = localRef.current
+      if (!node) return
+      node.offsetX(node.width() / 2)
+      node.offsetY(node.height() / 2)
+      node.getLayer()?.batchDraw()
+    })
+  }, [textObj.fontFamily, textObj.fontSize])
+
   return (
     <KonvaText
       ref={(node) => {

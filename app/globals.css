@@ -18,6 +18,79 @@
   --font-stats:   var(--font-barlow),     sans-serif;
 }
 
+@layer base {
+  @font-face {
+    font-family: 'Naserra';
+    src: url('/fonts/1FTV-Naserra.ttf') format('truetype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Noxis';
+    src: url('/fonts/1FTV-Noxis.otf') format('opentype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Tallings';
+    src: url('/fonts/1FTV-Tallingsvfc.ttf') format('truetype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Hello Farmer';
+    src: url('/fonts/1FTV-VIP-Hello-Farmer.otf') format('opentype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Longevity';
+    src: url('/fonts/1FTV-VIP-Longevity.otf') format('opentype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Pizza Hut';
+    src: url('/fonts/1FTV-VIP-PizzaHut-Display.ttf') format('truetype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Race Sport';
+    src: url('/fonts/1FTV-VIP-Race-Sport.ttf') format('truetype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Sakana';
+    src: url('/fonts/1FTV-VIP-Sakana.otf') format('opentype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Tackerlen';
+    src: url('/fonts/1FTV-VIP-Tackerlen.otf') format('opentype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Vanily';
+    src: url('/fonts/1FTV-VIP-Vanily.otf') format('opentype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Ethnocentric';
+    src: url('/fonts/1FTV-VIP-ethnocentric-rg.ttf') format('truetype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Neusharp Italic';
+    src: url('/fonts/1FTVVIPNeusharp-Italic.ttf') format('truetype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Batman Forever';
+    src: url('/fonts/SVN-Batman-Forever-Alternate.otf') format('opentype');
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Deneane';
+    src: url('/fonts/UTM-Deneane_END.ttf') format('truetype');
+    font-display: swap;
+  }
+}
+
 html { scroll-behavior: smooth; }
 body {
   background-color: #0A1628;
