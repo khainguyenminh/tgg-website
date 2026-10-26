@@ -4,26 +4,19 @@ import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { CheckIcon, ZaloIcon } from './ring/icons'
 import { EMAIL, ZALO_URL } from '@/lib/site'
+import { TIERS, type LineKey } from '@/lib/packages'
 
 const LINES = [
   { key: 'light', label: 'LIGHT & Comfort' },
   { key: 'pro', label: 'Guard & Protection PRO' },
 ] as const
 
-const PACKAGES_BY_LINE: Record<string, { key: string; label: string; price: string }[]> = {
-  light: [
-    { key: 'base', label: 'BASE', price: '1.400.000đ' },
-    { key: 'custom', label: 'Custom Text', price: '1.500.000đ' },
-    { key: 'full', label: 'Fully Design', price: '1.600.000đ' },
-  ],
-  pro: [
-    { key: 'base-pro', label: 'BASE PRO', price: '1.800.000đ' },
-    { key: 'custom-pro', label: 'Custom Text PRO', price: '1.900.000đ' },
-    { key: 'full-pro', label: 'Fully Design PRO', price: '2.000.000đ' },
-  ],
+const PACKAGES_BY_LINE: Record<LineKey, { key: string; label: string; price: string }[]> = {
+  light: TIERS.map((t) => ({ key: t.light.id, label: t.name, price: t.light.price })),
+  pro: TIERS.map((t) => ({ key: t.pro.id, label: `${t.name} PRO`, price: t.pro.price })),
 }
 
-type Line = 'light' | 'pro'
+type Line = LineKey
 
 function buildSummary({ line, pkg, name, phone, note }: { line: Line; pkg: string; name: string; phone: string; note: string }) {
   const lineLabel = LINES.find(l => l.key === line)?.label ?? line

@@ -3,12 +3,9 @@ import Link from 'next/link'
 import { photo } from '@/data/photos'
 import { ArrowIcon } from './ring/icons'
 import CrossSection from './ring/CrossSection'
+import { PRICE_FROM, TIERS } from '@/lib/packages'
 
-const tiers = [
-  { name: 'Base', desc: 'Trơn, không in', light: '1.400.000đ', pro: '1.800.000đ' },
-  { name: 'Custom Text', desc: 'Thêm tên hoặc số', light: '1.500.000đ', pro: '1.900.000đ' },
-  { name: 'Fully Design', desc: 'Thiết kế hoàn toàn theo ý', light: '1.600.000đ', pro: '2.000.000đ' },
-]
+const tiers = TIERS.map((t) => ({ name: t.name, desc: t.short, light: t.light.price, pro: t.pro.price }))
 
 const lines = [
   {
@@ -18,7 +15,7 @@ const lines = [
     layers: 2,
     layerNote: '2 lớp EVA mỏng',
     facts: ['Bóng rổ, bóng đá, gym và các môn không đối kháng', 'Màu trong suốt', 'Hàm trên, scan 3D miễn phí'],
-    from: '1.400.000đ',
+    from: PRICE_FROM.light,
     photo: photo('lab-light-on-model'),
     photoCaption: 'LIGHT trong suốt trên mẫu hàm',
   },
@@ -29,7 +26,7 @@ const lines = [
     layers: 3,
     layerNote: '3 lớp EVA dày',
     facts: ['Boxing, Muay Thái, MMA và các môn đối kháng', '16 màu EVA, in tên, số, logo', 'Hàm trên, scan 3D miễn phí'],
-    from: '1.800.000đ',
+    from: PRICE_FROM.pro,
     photo: photo('dvn'),
     photoCaption: 'PRO xanh hoàng gia, in chữ DVN',
   },
