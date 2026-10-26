@@ -183,7 +183,7 @@ export default function FAQPage() {
             <div className="flex flex-col gap-20">
               {categories.map((c) => (
                 <section key={c.id} id={c.id} aria-labelledby={`${c.id}-title`} className="scroll-mt-36 lg:scroll-mt-28">
-                  <h2 id={`${c.id}-title`} className="apron mb-8 text-[clamp(2.5rem,5vw,4.25rem)]">{c.label}</h2>
+                  <h2 id={`${c.id}-title`} className="apron mb-8 t-sub">{c.label}</h2>
                   <Accordion items={c.faqs} />
                 </section>
               ))}

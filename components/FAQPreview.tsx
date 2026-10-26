@@ -27,7 +27,7 @@ export default function FAQPreview() {
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
         <div className="grid gap-10 border-t-[3px] border-canvas-ink pt-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <div>
-            <h2 id="faq-title" className="apron text-[clamp(2.75rem,6vw,5rem)]">Hỏi trước khi lên đài.</h2>
+            <h2 id="faq-title" className="apron t-sub">Hỏi trước khi lên đài.</h2>
             <Link href="/faq" className="rope-link placard mt-8 inline-flex items-center gap-2 text-lg">
               Xem tất cả câu hỏi
               <ArrowIcon />

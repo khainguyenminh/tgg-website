@@ -17,7 +17,7 @@ export default function ZaloClose({
     <section aria-labelledby="close-title" className="relative bg-arena py-24 md:py-32">
       <span aria-hidden="true" className="rope rope-red absolute inset-x-0 top-0 rounded-none" />
       <div className="mx-auto grid max-w-[1400px] gap-10 px-4 md:px-8 lg:grid-cols-[1.15fr_1fr] lg:items-end">
-        <h2 id="close-title" className="apron text-[clamp(2.75rem,6vw,5rem)] text-arena-ink">{title}</h2>
+        <h2 id="close-title" className="apron t-sub text-arena-ink">{title}</h2>
         <div className="lg:max-w-[30rem] lg:justify-self-end">
           <p className="max-w-[30rem] text-lg leading-relaxed text-arena-mute">{lede}</p>
           <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad corner-pad-lg mt-8">

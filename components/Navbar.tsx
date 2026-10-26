@@ -98,7 +98,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className={`apron border-b-[3px] border-white/10 py-4 text-[3.25rem] ${
+                className={`apron border-b-[3px] border-white/10 py-4 text-[2.75rem] ${
                   pathname === link.href ? 'text-corner' : 'text-arena-ink'
                 }`}
               >

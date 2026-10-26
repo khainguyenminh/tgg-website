@@ -47,7 +47,7 @@ export default function ColorFloor() {
       <div className="mx-auto grid max-w-[1400px] gap-14 px-4 md:px-8 lg:grid-cols-[1fr_1.15fr] lg:items-start">
         <div>
           <h2 id="floor-title" className="sr-only">Chọn màu EVA cho dòng PRO</h2>
-          <p className="apron min-h-[2em] text-[clamp(3.5rem,8vw,7rem)]" aria-live="polite">
+          <p className="apron min-h-[2em] t-page" aria-live="polite">
             {color.name}
           </p>
           <p className="placard mt-2 text-lg opacity-80">{color.nameEn}</p>

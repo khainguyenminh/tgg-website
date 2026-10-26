@@ -40,7 +40,7 @@ export default function PageHead({
         </div>
       )}
       <div className="mx-auto max-w-[1400px] px-4 pb-14 pt-10 md:px-8 md:pb-20 md:pt-16">
-        <h1 className="apron max-w-[14ch] text-[clamp(3.2rem,9vw,8.5rem)] text-arena-ink">{title}</h1>
+        <h1 className="apron max-w-[14ch] t-page text-arena-ink">{title}</h1>
         {lede && <p className="mt-6 max-w-[36rem] text-lg leading-relaxed text-arena-mute md:text-xl">{lede}</p>}
         {photo && (
           <figure className="-mx-4 mt-8 md:-mx-8 lg:hidden">

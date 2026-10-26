@@ -3,86 +3,69 @@ import Link from 'next/link'
 import { photo, type Photo } from '@/data/photos'
 import { ArrowIcon } from './ring/icons'
 
-const ROW_A = ['tiboom', 'nmt', 'hoang-kha', 'mai-tyson', 'kien-cuong', 'mqh', 'dvn', 'tfcmma', 'mikey', 'anh-khiem', 'kevin', 'wave', 'thanh-phong', 'game-over'].map(photo)
-const ROW_B = ['vu-le', 'destinee', 'tiger-kem', 'dinh-tien', 'nam-quan', 'minh-loc', 'thanh-thuy', 'my-hoang', 'rabbit', 'ntv', 'dont-quit', 'derek', 'demut', 'wukong-green'].map(photo)
+// Chiếc đầu tiên đứng lớn, tám chiếc còn lại xếp quanh nó
+const PICKS = ['raymond', 'tiboom', 'kevin', 'wave', 'thanh-phong', 'mikey', 'rabbit', 'tfcmma', 'anh-khiem'].map(photo)
 
-function Tile({ p, hidden }: { p: Photo; hidden?: boolean }) {
+function Tile({ p, lead }: { p: Photo; lead?: boolean }) {
   return (
-    <figure className={`w-[17rem] shrink-0 md:w-[22rem] ${hidden ? 'marquee-dup' : ''}`} aria-hidden={hidden || undefined}>
-      <div className="relative aspect-[3/2] overflow-hidden rounded-[6px] bg-black">
+    <li className={lead ? 'col-span-2 lg:row-span-2' : ''}>
+      <Link href="/gallery" className={`group relative block overflow-hidden rounded-[6px] bg-black ${lead ? 'aspect-[3/2] lg:aspect-auto lg:h-full' : 'aspect-[3/2]'}`}>
         <Image
           src={p.src}
-          alt={hidden ? '' : p.alt}
+          alt={p.alt}
           fill
           placeholder="blur"
           blurDataURL={p.blurDataURL}
-          sizes="(min-width: 768px) 22rem, 17rem"
-          className="object-cover"
+          sizes={lead ? '(min-width: 1024px) 50vw, 100vw' : '(min-width: 1024px) 25vw, 50vw'}
+          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.04]"
         />
-      </div>
-      <figcaption className="mt-3">
-        <span className="flex items-baseline justify-between gap-3">
-          <span className="placard truncate text-xl text-arena-ink">{p.lettering || 'Fully Design'}</span>
-          <span className="shrink-0 text-sm text-arena-mute">{p.color}</span>
+        {/* Tên in trên guard nằm trên phần phản chiếu tối của mặt kính */}
+        <span className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-3 bg-gradient-to-t from-black/80 to-transparent px-3 pb-2.5 pt-8 md:px-4 md:pb-3">
+          <span className={`placard truncate text-arena-ink ${lead ? 'text-xl md:text-2xl' : 'text-base md:text-lg'}`}>
+            {p.lettering || 'Fully Design'}
+          </span>
+          <span className="hidden shrink-0 text-sm text-arena-mute sm:inline">{p.color}</span>
         </span>
-        <Link
-          href="/customize"
-          tabIndex={hidden ? -1 : undefined}
-          className="placard mt-2 inline-flex min-h-11 items-center gap-1.5 text-base text-corner hover:text-arena-ink"
-        >
-          Làm một chiếc như này <ArrowIcon className="h-4 w-4" />
-        </Link>
-      </figcaption>
-    </figure>
+      </Link>
+    </li>
   )
 }
 
-function Row({ items, reverse, duration }: { items: Photo[]; reverse?: boolean; duration: string }) {
-  return (
-    <div
-      className="marquee overflow-hidden pl-[var(--edge)] [--edge:1rem] [scroll-padding-inline-start:var(--edge)] md:[--edge:max(2rem,calc((100%-1400px)/2+2rem))]"
-      role="region"
-      aria-label="Dải ảnh mouthguard đã làm, rê chuột hoặc focus để dừng"
-    >
-      <ul
-        className={`marquee-track flex w-max gap-5 pr-5 ${reverse ? 'reverse' : ''}`}
-        style={{ '--marquee-duration': duration } as React.CSSProperties}
-      >
-        {items.map((p) => (
-          <li key={p.id}><Tile p={p} /></li>
-        ))}
-        {items.map((p) => (
-          <li key={`${p.id}-dup`} className="marquee-dup"><Tile p={p} hidden /></li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-// Lineup: bức tường tên, mỗi chiếc guard một cái tên
+// Lineup: một bức tường nhỏ những chiếc đã làm, mỗi chiếc một cái tên
 export default function Lineup() {
+  const [lead, ...rest] = PICKS
   return (
-    <section aria-labelledby="lineup-title" className="bg-arena pb-24 pt-20 md:pb-32 md:pt-28">
+    <section aria-labelledby="lineup-title" className="bg-arena py-24 md:py-32">
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
-        <h2 id="lineup-title" className="apron text-[clamp(3rem,8.5vw,7.5rem)] text-arena-ink">
-          174+ chiếc.
-          <span className="block text-arena-mute">Mỗi chiếc một cái tên.</span>
-        </h2>
-        <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <p className="max-w-[36rem] text-lg leading-relaxed text-arena-mute">
-            Tên, số, cờ, logo câu lạc bộ hay hình vẽ tay: tất cả theo ý bạn, từ trong suốt tối giản đến full custom. Đây là
-            những chiếc đã rời lab Khai Nguyên.
-          </p>
-          <Link href="/gallery" className="rope-link placard inline-flex shrink-0 items-center gap-2 self-start text-lg text-arena-ink md:self-auto">
-            Mở toàn bộ gallery
-            <ArrowIcon />
-          </Link>
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+          <div>
+            <h2 id="lineup-title" className="apron t-headline text-arena-ink">
+              174+ chiếc.
+              <span className="block text-arena-mute">Mỗi chiếc một cái tên.</span>
+            </h2>
+            <p className="mt-6 max-w-[36rem] text-lg leading-relaxed text-arena-mute">
+              Tên, số, cờ, logo câu lạc bộ hay hình vẽ tay: tất cả theo ý bạn, từ trong suốt tối giản đến full custom. Đây là
+              những chiếc đã rời lab Khai Nguyên.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-x-8 gap-y-4 lg:flex-col lg:items-end">
+            <Link href="/gallery" className="rope-link placard inline-flex items-center gap-2 text-lg text-arena-ink">
+              Mở toàn bộ gallery
+              <ArrowIcon />
+            </Link>
+            <Link href="/customize" className="rope-link placard inline-flex items-center gap-2 text-lg text-corner hover:text-arena-ink">
+              Thiết kế chiếc của bạn
+              <ArrowIcon />
+            </Link>
+          </div>
         </div>
-      </div>
 
-      <div className="mt-14 flex flex-col gap-8">
-        <Row items={ROW_A} duration="80s" />
-        <Row items={ROW_B} duration="70s" reverse />
+        <ul className="mt-12 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
+          <Tile p={lead} lead />
+          {rest.map((p) => (
+            <Tile key={p.id} p={p} />
+          ))}
+        </ul>
       </div>
     </section>
   )

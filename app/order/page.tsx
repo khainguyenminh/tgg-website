@@ -78,7 +78,7 @@ export default function OrderPage() {
       <Navbar />
       <main>
         <PageHead
-          title="Đặt hàng trong năm hiệp."
+          title="Đặt hàng trong 5 bước."
           lede="Từ tư vấn đến nhận hàng tận nhà: chỉ 5 bước, không cần đặt cọc, không cần đến TP.HCM nếu bạn ở tỉnh."
           photo={photo('case-box')}
         >
@@ -95,14 +95,14 @@ export default function OrderPage() {
           </a>
         </PageHead>
 
-        {/* Năm hiệp */}
+        {/* Năm bước */}
         <section aria-labelledby="steps-title" className="bg-arena py-24 md:py-32">
           <div className="mx-auto max-w-[1400px] px-4 md:px-8">
             <h2 id="steps-title" className="sr-only">Quy trình đặt hàng</h2>
             <ol className="border-t-[3px] border-arena-ink">
               {STEPS.map((step, i) => (
-                <li key={step.title} className="grid gap-4 border-b-[3px] border-white/10 py-10 sm:grid-cols-[9rem_1fr] sm:gap-8">
-                  <p className="apron text-5xl text-rope-red">Hiệp&nbsp;{i + 1}</p>
+                <li key={step.title} className="grid gap-4 border-b-[3px] border-white/10 py-10 sm:grid-cols-[5rem_1fr] sm:gap-8">
+                  <p className="apron tabular text-5xl leading-none text-corner" aria-hidden="true">{i + 1}</p>
                   <div>
                     <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                       <h3 className="placard text-3xl text-arena-ink">{step.title}</h3>
@@ -144,7 +144,7 @@ export default function OrderPage() {
           <span aria-hidden="true" className="rope rope-blue absolute inset-x-0 top-0 rounded-none" />
           <div className="mx-auto grid max-w-[1400px] gap-14 px-4 md:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div>
-              <h2 id="form-title" className="apron text-[clamp(2.75rem,6vw,5rem)]">Điền thông tin.</h2>
+              <h2 id="form-title" className="apron t-sub">Điền thông tin.</h2>
               <p className="mt-6 max-w-[28rem] text-lg leading-relaxed text-canvas-mute">
                 Không cần đặt cọc trước. Bảo hành fit 1 đổi 1. TGG xác nhận và đặt hẹn scan với bạn ngay sau khi nhận.
               </p>

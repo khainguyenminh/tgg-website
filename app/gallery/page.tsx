@@ -127,9 +127,14 @@ function Lightbox({
         <p className="placard text-base text-arena-mute">
           {describe(group)} <span className="tabular ml-2 text-arena-ink">{index + 1} / {count}</span>
         </p>
-        <button ref={closeRef} type="button" onClick={onClose} aria-label="Đóng" className="flex h-11 w-11 items-center justify-center rounded-md text-arena-ink hover:bg-arena-lift">
-          <CloseIcon className="h-6 w-6" />
-        </button>
+        <div className="flex items-center gap-4 md:gap-6">
+          <Link href="/customize" className="placard inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-sm text-corner hover:text-arena-ink md:text-base">
+            Làm một chiếc như này <ArrowIcon className="h-4 w-4 shrink-0" />
+          </Link>
+          <button ref={closeRef} type="button" onClick={onClose} aria-label="Đóng" className="flex h-11 w-11 items-center justify-center rounded-md text-arena-ink hover:bg-arena-lift">
+            <CloseIcon className="h-6 w-6" />
+          </button>
+        </div>
       </div>
       <span aria-hidden="true" className="rope rope-blue rounded-none" />
 
@@ -219,7 +224,7 @@ export default function GalleryPage() {
       <main className="bg-arena pt-16 md:pt-[72px]">
         <header className="mx-auto max-w-[1400px] px-4 pb-8 pt-10 md:px-8 md:pt-14">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <h1 className="apron text-[clamp(3.2rem,8vw,7rem)] text-arena-ink">Gallery.</h1>
+            <h1 className="apron t-page text-arena-ink">Gallery.</h1>
             <p className="max-w-[30rem] text-lg leading-relaxed text-arena-mute">
               Ảnh thực tế các mouthguard đã rời lab Khai Nguyên. Lọc theo gói và màu, bấm vào ảnh để xem lớn.
             </p>
@@ -304,7 +309,7 @@ export default function GalleryPage() {
 
           {error && (
             <div className="py-24">
-              <p className="apron text-[clamp(2.25rem,5vw,4rem)] text-arena-ink">Không tải được gallery.</p>
+              <p className="apron t-sub text-arena-ink">Không tải được gallery.</p>
               <p className="mt-4 max-w-[30rem] text-lg text-arena-mute">Có thể do mạng chập chờn. Thử tải lại, hoặc xem ảnh qua Instagram của TGG.</p>
               <button type="button" onClick={loadGallery} className="arena-pad mt-8">
                 Thử lại
@@ -314,7 +319,7 @@ export default function GalleryPage() {
 
           {!loading && !error && filtered.length === 0 && (
             <div className="py-24">
-              <p className="apron text-[clamp(2.25rem,5vw,4rem)] text-arena-ink">Chưa có thiết kế nào khớp.</p>
+              <p className="apron t-sub text-arena-ink">Chưa có thiết kế nào khớp.</p>
               <p className="mt-4 max-w-[30rem] text-lg text-arena-mute">
                 Thử bỏ bớt một bộ lọc. Màu bạn muốn chưa có ảnh ở đây? Nhắn Zalo để hỏi TGG.
               </p>
@@ -370,11 +375,6 @@ export default function GalleryPage() {
                       <figcaption className="mt-3">
                         <span className="placard block text-base text-arena-ink">{comboLabel(group.combo) ?? 'Mouthguard'}</span>
                         <span className="block text-sm text-arena-mute">{colorLabel(group.color) ?? 'Nhiều màu'}</span>
-                        <Link href="/customize" className="placard mt-1 inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-sm text-corner hover:text-arena-ink">
-                          <span className="sm:hidden">Làm giống vậy</span>
-                          <span className="hidden sm:inline">Làm một chiếc như này</span>
-                          <ArrowIcon className="h-4 w-4 shrink-0" />
-                        </Link>
                       </figcaption>
                     </figure>
                   </li>

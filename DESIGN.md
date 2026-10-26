@@ -20,31 +20,31 @@ colors:
 typography:
   display:
     fontFamily: "Archivo, sans-serif"
-    fontSize: "clamp(3.4rem, 11.5vw, 11rem)"
+    fontSize: "clamp(2.75rem, 6vw, 6rem)"
     fontWeight: 900
-    lineHeight: 0.94
-    letterSpacing: "-0.005em"
+    lineHeight: 1.15
+    letterSpacing: "0"
     fontVariation: "'wdth' 62"
   display-page:
     fontFamily: "Archivo, sans-serif"
-    fontSize: "clamp(3.2rem, 9vw, 8.5rem)"
+    fontSize: "clamp(2.5rem, 5.2vw, 5rem)"
     fontWeight: 900
-    lineHeight: 0.94
-    letterSpacing: "-0.005em"
+    lineHeight: 1.15
+    letterSpacing: "0"
     fontVariation: "'wdth' 62"
   headline:
     fontFamily: "Archivo, sans-serif"
-    fontSize: "clamp(3rem, 8.5vw, 7.5rem)"
+    fontSize: "clamp(2.25rem, 4.4vw, 4.25rem)"
     fontWeight: 900
-    lineHeight: 0.94
-    letterSpacing: "-0.005em"
+    lineHeight: 1.15
+    letterSpacing: "0"
     fontVariation: "'wdth' 62"
   headline-sub:
     fontFamily: "Archivo, sans-serif"
-    fontSize: "clamp(2.75rem, 6vw, 5rem)"
+    fontSize: "clamp(1.875rem, 3.2vw, 3rem)"
     fontWeight: 900
-    lineHeight: 0.94
-    letterSpacing: "-0.005em"
+    lineHeight: 1.15
+    letterSpacing: "0"
     fontVariation: "'wdth' 62"
   title:
     fontFamily: "Archivo, sans-serif"
@@ -225,7 +225,7 @@ A near-neutral, cool ring palette: black arena, pale grey canvas, and three rope
 - **Corner Blue, Lit** (`corner-hover`): the corner pad's hover fill only.
 
 ### Secondary
-- **Rope Red** (`rope-red`): the red rope that opens the Products and closing sections (including every inner page's Zalo close) and the round numerals ("Hiệp 1…5", designer step numbers) on black. As text it measures about 3.9:1, so it appears only at display sizes (48px and up). It is never an error colour.
+- **Rope Red** (`rope-red`): the red rope that opens the Products and closing sections (including every inner page's Zalo close) and the designer's step numbers on black. As text it measures about 3.9:1, so it appears only at display sizes (48px and up). It is never an error colour.
 
 ### Neutral
 - **Arena** (`arena`): the page ground, the `html`/`body` background, photo sections, the nav bar once scrolled (at 95% with a light blur), the footer, the designer's dark field fill.
@@ -268,17 +268,18 @@ The pre-Góc Xanh navy tokens and `corner-deep` have been removed from `globals.
 The site uses Archivo instead of the brand guide's Montserrat / Inter / Oswald. The user approved this change, so the typography section of `content/brand-kit/brand-guidelines.md` is out of date for the website. The guide's logo and TGG Blue commitments still bind.
 
 ### Hierarchy
-- **Display / Apron** (900, 62% width, uppercase, `clamp(3.4rem, 11.5vw, 11rem)` for the hero h1 and `clamp(3.4rem, 11vw, 10rem)` for the closing bell, line-height 0.94): one per page, left-aligned, may run nearly edge to edge. The second line often switches to Corner Blue on black or to Arena Mute.
-- **Page title / Apron** (`display-page`, `clamp(3.2rem, 9vw, 8.5rem)`, max 14ch): the h1 of every inner page (Products, FAQ, Gallery, Order), set by the page head. The designer's h1 runs slightly smaller (`clamp(3.2rem, 8vw, 7rem)`) to leave room for the tool.
-- **Headline / Apron** (900, 62%, `clamp(3rem, 8–8.5vw, 7–7.5rem)`, 0.94): section h2s. Product line names (LIGHT, PRO) go larger at `clamp(4.5rem, 9vw, 8rem)`.
-- **Headline-sub / Apron** (900, 62%, `clamp(2.75rem, 6vw, 5rem)`): secondary h2/h3 inside a section (parents strip, FAQ), the inner-page Zalo close and the order form heading. FAQ category headings sit just under it (`clamp(2.5rem, 5vw, 4.25rem)`). The mobile menu links use apron at 3.25rem.
+Every apron size is a class in `globals.css` (`.t-display`, `.t-page`, `.t-headline`, `.t-sub`); use the class, never a one-off clamp. Nothing on the site runs above 6rem.
+- **Display / Apron** (`.t-display`, 900, 62% width, uppercase, `clamp(2.75rem, 6vw, 6rem)`, line-height 1.15): the homepage h1 only, left-aligned beside the hero photo. The second line often switches to Corner Blue on black or to Arena Mute.
+- **Page title / Apron** (`.t-page`, `clamp(2.5rem, 5.2vw, 5rem)`, max 14ch): the h1 of every inner page (Products, FAQ, Gallery, Order, the designer), set by the page head, and the colour name on the colour floor.
+- **Headline / Apron** (`.t-headline`, `clamp(2.25rem, 4.4vw, 4.25rem)`): section h2s, including the closing section. Product line names (LIGHT, PRO) go larger at `clamp(3.25rem, 6vw, 5.5rem)` on the homepage and `clamp(3.75rem, 8vw, 7rem)` on /products.
+- **Headline-sub / Apron** (`.t-sub`, `clamp(1.875rem, 3.2vw, 3rem)`): secondary h2/h3 inside a section (parents strip, FAQ), FAQ category headings, the inner-page Zalo close, the order form heading and the gallery empty/error states. The mobile menu links use apron at 2.75rem. Step numerals are apron at 3rem in Corner Blue.
 - **Title / Placard** (800, 75%, uppercase, 1.5–1.875rem, line-height 1): round titles, layer notes, the price-table caption, order step and option titles.
 - **Body** (400, 100%, 1.125rem, line-height 1.625): ledes and descriptions, capped at 28–40rem (about 60–75ch). Page-head ledes step up to 1.25rem from `md`. Use 1rem for supporting copy and field input text, and 1.25rem for short parent facts.
 - **Label / Placard** (800, 75%, uppercase, 0.95–1.125rem, +0.02em): nav links, promises on the rope, rope-links, button text, segmented controls and field labels (0.95rem), figure captions (0.875rem), table headers, trailing tags.
 - **Numeral** (placard with tabular figures, `normal-case`): prices (1.25rem in tables, 1.875–2.25rem for "từ" prices), the round counter and the lightbox "n / total" count.
 
 ### Named Rules
-**The Apron Leading Rule.** Apron type keeps line-height 0.94 and 0.06em top padding so stacked Vietnamese diacritics (Ầ, Ặ, Ữ) clear the line above. Never tighten it further.
+**The Apron Leading Rule.** Apron type keeps line-height 1.15 and 0.04em top padding. At 62% width Archivo's caps are 0.69em tall, stacked marks (Ầ, Ấ) reach 1.05em and the dot below (Ạ) drops 0.19em, so a dot-below over a circumflex (BẠN over TÊN) needs at least 1.08 to stay apart. Never tighten it below 1.15.
 
 **The Three Widths Rule.** Use 62% only for headings, 75% only for labels, titles and buttons, and 100% for anything a person reads as a sentence. Never set a paragraph in apron or placard. Questions in the FAQ are placard with `normal-case` at 1.35rem (a recorded detector exception).
 
@@ -287,11 +288,11 @@ The site uses Archivo instead of the brand guide's Montserrat / Inter / Oswald. 
 ## Layout
 
 - **Container:** max-width 1400px, centred, with gutters of 16px on mobile and 32px from `md` up. Photo marquees and ropes break out to full bleed. The marquee's left edge still aligns to the container through a computed `--edge` padding.
-- **Section rhythm:** 96px vertical padding, or 128px from `md` up. The Lineup section's top is tighter (80px, or 112px from `md` up). Within a section: the heading, then the lede at 24px, then the content block at 48–56px, then secondary blocks at 80–96px.
+- **Section rhythm:** 96px vertical padding, or 128px from `md` up. Within a section: the heading, then the lede at 24px, then the content block at 48–56px, then secondary blocks at 80–96px.
 - **Inner pages:** every inner page opens with the page head on arena and ends with the Zalo close on arena; the body between them follows the Two Grounds Rule.
 - **Grids:** asymmetric two-column splits on desktop (`1fr 1.15fr`, `0.9fr 1.1fr`, `0.8fr 1.2fr`, `0.7fr 1.3fr`, `1.15fr 1fr`). Never use three equal cards. Product comparison and the order options use `1fr 3px 1fr`, with a vertical rope as the centre column. Photo grids use a 16px gap. Placeholder grids are three-up from `sm`.
-- **Breakpoints:** Tailwind defaults (`sm` 640px, `md` 768px, `lg` 1024px). The `lg` breakpoint is the desktop switch for the inline nav, the hero and page-head photo anchoring, the sticky round clock, the FAQ index, the designer's two-column layout and hiding the mobile corner bar.
-- **Sticky devices:** the How It Works heading, the round clock and the FAQ index pin at `top: 7rem` on desktop. Directly under the nav (`top` 64px, or 72px from `md`) pin: the compact mobile round clock, the gallery filter bar, the FAQ mobile chip row and the designer's preview stage below `lg`. Anchored sections set `scroll-margin-top` to clear whichever bar is pinned.
+- **Breakpoints:** Tailwind defaults (`sm` 640px, `md` 768px, `lg` 1024px). The `lg` breakpoint is the desktop switch for the inline nav, the hero's two-column split, page-head photo anchoring, the five-column steps, the FAQ index, the designer's two-column layout and hiding the mobile corner bar.
+- **Sticky devices:** the FAQ index pins at `top: 7rem` on desktop. Directly under the nav (`top` 64px, or 72px from `md`) pin: the gallery filter bar, the FAQ mobile chip row and the designer's preview stage below `lg`. Anchored sections set `scroll-margin-top` to clear whichever bar is pinned.
 - **Designer layout:** tools in a 320px column on the left, the preview stage on the right (`320px minmax(0, 1fr)`, rows `auto 1fr`). The stage sits in row 1 so the download and reset actions land directly under it while the taller tool column spills into row 2. Below `lg` the stage comes first and pins under the nav while the tools scroll beneath it.
 - **Mobile action:** below `lg`, a fixed bottom bar (blue rope on top, arena at 95%, safe-area padding) holds the corner pad (flex 1.4) and an arena pad (flex 1). The footer adds 112px of bottom padding below `lg` so the bar never covers content.
 - **Nav height:** 64px, or 72px from `md` up. Pages offset their first section by the same amount.
@@ -303,7 +304,7 @@ The site uses Archivo instead of the brand guide's Montserrat / Inter / Oswald. 
 
 ## Elevation & Depth
 
-The system is flat and lit. Depth comes from the arena's darkness, stage light and photography, not from stacked cards. A soft radial "arena light" (`radial-gradient(60% 50% at 70% 8%, rgb(242 244 245 / 0.07), transparent 70%)`) falls from the top of the hero. Hero and page-head photos fade into the black through a left and top mask (transparent to opaque over 14–16% on the hero, 30% and 18% on the page head), so the photo reads as full-bleed. Blurred 95% bars (the nav once scrolled, the mobile bar, the mobile round clock, the gallery filter bar on arena and the FAQ chip row on canvas) are the only translucent layers. The gallery lightbox is arena at 97%.
+The system is flat and lit. Depth comes from the arena's darkness, stage light and photography, not from stacked cards. A soft radial "arena light" (`radial-gradient(60% 50% at 70% 8%, rgb(242 244 245 / 0.07), transparent 70%)`) falls from the top of the hero. Hero and page-head photos fade into the black through a left and top mask (18% from the left and 12% at top and bottom on the hero, 30% and 18% on the page head), so the photo reads as full-bleed. On desktop the hero is a `0.9fr 1.1fr` split, vertically centred: headline, lede and corner pad on the left, the 3:2 photo on the right running out to the viewport edge; the promises sit on the rope below. Blurred 95% bars (the nav once scrolled, the mobile bar, the gallery filter bar on arena and the FAQ chip row on canvas) are the only translucent layers. The gallery lightbox is arena at 97%.
 
 ### Shadow Vocabulary
 - **Pad padding** (`box-shadow: inset 0 -5px 0 rgb(0 0 0 / 0.18), 0 10px 24px -12px rgb(28 166 223 / 0.55)`): the corner pad only. The inset bottom reads as foam thickness, and the faint blue spill sits under it.
@@ -365,7 +366,7 @@ The close of every inner page, on arena. A squared red rope across the top, then
 A studio photo on black glass: 3:2, 6px radius, black backing, `object-cover`, and a blur placeholder from the pipeline. The caption below is placard type and shows the guard's printed lettering (Arena Ink or Canvas Ink) with the EVA colour name in mute. Fall back to "Fully Design" when there is no lettering. Never caption with customer or club names.
 
 ### Gallery Tile
-A 4:3 crop of a customer photo group on black, 6px radius. When a group has several images, a strip of 44px square thumbnails scrolls horizontally inside the tile; inactive thumbnails sit at 50% opacity and the active one carries a 3px Corner Blue outline. Under the caption a Corner Blue placard link to /customize reads "Làm giống vậy" on mobile and "Làm một chiếc như này" from `sm` (on black only, 44px tall). Opening a tile shows the full, uncropped image in an arena lightbox with a placard "n / total" counter, a 44px close button and a blue rope under its header. Loading tiles are Arena Lift at the same ratio and pulse only when motion is allowed.
+A 4:3 crop of a customer photo group on black, 6px radius. When a group has several images, a strip of 44px square thumbnails scrolls horizontally inside the tile; inactive thumbnails sit at 50% opacity and the active one carries a 3px Corner Blue outline. The caption is the package and colour only; tiles carry no per-tile action. Opening a tile shows the full, uncropped image in an arena lightbox whose header holds a placard "n / total" counter, the one Corner Blue "Làm một chiếc như này" link to /customize, a 44px close button and a blue rope under it. Loading tiles are Arena Lift at the same ratio and pulse only when motion is allowed.
 
 ### Filter Bar (Gallery)
 A sticky bar under the nav: arena at 95% with a blur, a white rope above and a blue rope below, holding two horizontally scrolling rows of segmented controls (style and EVA colour), each with an "all" option first. A polite live region under it states the result count, with a rope-link to clear filters.
@@ -391,11 +392,14 @@ The /customize tool on arena. The PRO / LIGHT choice is a pair of segmented cont
 ### Colour Floor (signature)
 The section ground floods with the selected PRO EVA colour (700ms background transition), and the text switches to the higher-contrast ink. Above the picker sits the colour name in apron, announced through `aria-live`. The 16 swatches form a radiogroup in 8 columns with roving tabindex and arrow-key movement. Each swatch is 6px rounded and at least 44px, and the selected swatch shows the selection ring. Matching studio photos appear beside it. When none exist, it shows the real EVA-sheets photo with an honest caption.
 
-### Round Clock (signature)
-A process shown as boxing rounds. "Hiệp N / 5" is set in apron with tabular placard, above five 3px progress ropes (blue once reached, white at 25% otherwise). It is sticky on desktop and compact under the nav on mobile. Each step has a photo or photo slot, a Rope Red apron "Hiệp N" at 3rem, a placard title and a body description. On /order the same rounds run as a list: a `9rem 1fr` row per round from `sm`, divided by 3px white-at-10% rules.
+### Five Steps (How It Works)
+The process as five plain steps read left to right, with no ring metaphor. Each step opens with an apron numeral (3rem, Corner Blue) followed by a 3px rope running to the next step (white at 25%, the last one blue), then a 3:2 photo or photo slot, a placard title and a 1rem body description. Five columns from `lg`, two from `sm`, one on phones. The section heading sits in a `1fr auto` split with the corner pad on the right from `lg`. On /order the same steps run as a list: a `5rem 1fr` row per step from `sm`, divided by 3px white-at-10% rules.
 
-### Marquee (Lineup)
-Two rows of photo tiles (17rem, or 22rem from `md` up) drift in opposite directions (70–80s, linear). They pause on hover and on focus-within. Duplicate tiles are `aria-hidden` and taken out of the tab order. Under reduced motion each row becomes a horizontal scroll-snap strip and the duplicates are removed.
+### Lineup (homepage gallery)
+A static grid of nine studio photos, no motion: four columns from `lg` with the first photo spanning two columns and two rows, two columns below `lg` with the first photo full width. Every tile is a 3:2 link to /gallery with its lettering and colour set over the dark reflection at the bottom (a black-to-transparent scrim). The image scales to 1.04 on hover when motion is allowed. The section has exactly two actions, both rope-links: "Mở toàn bộ gallery" and "Thiết kế chiếc của bạn" (Corner Blue, to /customize).
+
+### Customer Wall
+"Khách hàng đeo guard TGG.": four 4:5 portrait photos of customers wearing their guards (two columns, four from `lg`), on canvas. Until real photos exist each is a canvas Photo Slot naming the shot to come.
 
 ### Motion vocabulary
 These belong to the world, not to a component. The ease is `cubic-bezier(0.16, 1, 0.3, 1)`. Ropes draw in from the left over 900ms (staggered 120ms). Arena lights come up on hero and page-head photos over 1400ms (from `brightness(0.35) saturate(0.6)`). The floor floods over 700ms and rope-links pull over 400ms. Controls and fields change colour over 200ms. All of these run only under `prefers-reduced-motion: no-preference`, and smooth scrolling follows the same condition.
@@ -409,7 +413,7 @@ Shipping photos come only from `data/photo-manifest.json` (source path, letterin
 - **Do** give every section one ground, arena or canvas, and mark each change of ground with a full-width 3px rope (`rounded-none`).
 - **Do** use a 3px rope (or a 3px border in a rope colour) for every divider, underline, progress bar and table rule. The only lighter rule is the 1px Canvas Fold between table rows.
 - **Do** put the primary action in a Corner Blue corner pad with Canvas Ink type, and keep the Zalo pad nearest to the thumb on mobile.
-- **Do** set headings in apron (Archivo 62% / 900 / uppercase / 0.94 leading), labels and buttons in placard (75% / 800), and sentences at 100%.
+- **Do** set headings in apron (Archivo 62% / 900 / uppercase / 1.15 leading, sizes from the `.t-*` scale), labels and buttons in placard (75% / 800), and sentences at 100%.
 - **Do** show real studio photos at 3:2 on black with 6px corners, captioned with the printed lettering, and use a labelled Photo Slot where a photo is still missing.
 - **Do** keep every interactive target at 44×44px or larger.
 - **Do** give every animation a reduced-motion still, and pause anything that moves on hover and focus.

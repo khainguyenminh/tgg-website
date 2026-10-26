@@ -131,7 +131,7 @@ function LineSection({ line }: { line: Line }) {
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
-            <h2 id={`${line.key}-title`} className="apron text-[clamp(5rem,13vw,11rem)]">{line.name}</h2>
+            <h2 id={`${line.key}-title`} className="apron text-[clamp(3.75rem,8vw,7rem)]">{line.name}</h2>
             <p className={`placard text-2xl ${mute}`}>{line.tagline}</p>
             <p className={`mt-6 max-w-[34rem] text-lg leading-relaxed ${mute}`}>{line.lede}</p>
             <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-2" aria-label="Phù hợp cho">
@@ -180,7 +180,7 @@ function LineSection({ line }: { line: Line }) {
         </dl>
 
         {/* Gói giá: ba cột chia bằng dây dọc */}
-        <h3 className="apron mt-24 text-[clamp(2.75rem,6vw,5rem)]">Chọn gói {line.name}.</h3>
+        <h3 className="apron mt-24 t-sub">Chọn gói {line.name}.</h3>
         <ol className="mt-10 grid gap-12 lg:grid-cols-3 lg:gap-0">
           {line.packages.map((pkg, i) => (
             <li key={pkg.id} className={`flex flex-col ${i > 0 ? `lg:border-l-[3px] lg:pl-10 ${rule}` : ''} ${i < 2 ? 'lg:pr-10' : ''}`}>
@@ -264,7 +264,7 @@ export default function ProductsPage() {
           <div className="mx-auto max-w-[1400px] px-4 md:px-8">
             <div className="grid gap-10 border-t-[3px] border-canvas-ink pt-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
               <div>
-                <h2 id="compare-title" className="apron text-[clamp(2.75rem,6vw,5rem)]">LIGHT hay PRO?</h2>
+                <h2 id="compare-title" className="apron t-sub">LIGHT hay PRO?</h2>
                 <p className="mt-6 max-w-[28rem] text-lg leading-relaxed text-canvas-mute">
                   Cùng quy trình, cùng lab. Khác nhau ở số lớp EVA, màu và môn bạn tập.
                 </p>

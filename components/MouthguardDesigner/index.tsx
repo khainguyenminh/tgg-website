@@ -46,7 +46,7 @@ export default function MouthguardDesigner() {
       <div className="mx-auto max-w-[1400px] px-4 pb-24 pt-10 md:px-8 md:pb-32 md:pt-14">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="apron text-[clamp(3.2rem,8vw,7rem)] text-arena-ink">Tự thiết kế.</h1>
+            <h1 className="apron t-page text-arena-ink">Tự thiết kế.</h1>
             <p className="placard mt-2 text-xl text-arena-mute">Design your mouthguard</p>
           </div>
           <div className="lg:max-w-[30rem]">

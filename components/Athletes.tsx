@@ -8,26 +8,37 @@ const parentFacts = [
   'Trẻ dùng được khi đã mọc đủ răng vĩnh viễn. Chưa chắc con đã đủ chưa? Hỏi TGG trước khi scan.',
 ]
 
-// Trên sàn đấu: chừa sẵn chỗ cho ảnh VĐV đeo guard và lời chứng thực thật
+// Ảnh khách hàng đang đeo guard TGG. Khi có ảnh thật, thay ô chờ bằng ảnh theo cùng tỉ lệ 4:5
+const wearers = [
+  'Khách hàng cười để lộ guard có tên',
+  'VĐV đeo guard PRO khi thi đấu',
+  'Khách hàng đeo guard trong buổi tập',
+  'VĐV nhỏ tuổi đeo guard LIGHT',
+]
+
 export default function Athletes() {
   return (
     <section aria-labelledby="athletes-title" className="on-canvas bg-canvas py-24 text-canvas-ink md:py-32">
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
-        <h2 id="athletes-title" className="apron text-[clamp(3rem,8.5vw,7.5rem)]">Trên sàn đấu.</h2>
-        <p className="mt-6 max-w-[36rem] text-lg leading-relaxed text-canvas-mute">
-          Võ sĩ và vận động viên đeo guard TGG khi tập và khi thi đấu.
-        </p>
-
-        <div className="mt-12 grid grid-cols-2 gap-4 md:h-[30rem] md:grid-cols-[1.3fr_1fr] md:grid-rows-2">
-          <PhotoSlot tone="canvas" label="VĐV đeo guard PRO trên sàn đấu" className="col-span-2 aspect-[3/2] md:col-span-1 md:row-span-2 md:aspect-auto" />
-          <PhotoSlot tone="canvas" label="Võ sĩ cười để lộ guard có tên" className="aspect-[3/2] md:aspect-auto" />
-          <PhotoSlot tone="canvas" label="Lời chứng thực của VĐV hoặc HLV" className="aspect-[3/2] md:aspect-auto" />
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+          <h2 id="athletes-title" className="apron t-headline">Khách hàng đeo guard TGG.</h2>
+          <p className="max-w-[30rem] text-lg leading-relaxed text-canvas-mute">
+            Võ sĩ, vận động viên và các bạn nhỏ đeo mouthguard TGG khi tập luyện và thi đấu.
+          </p>
         </div>
 
+        <ul className="mt-12 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
+          {wearers.map((label) => (
+            <li key={label}>
+              <PhotoSlot tone="canvas" label={label} className="aspect-[4/5]" />
+            </li>
+          ))}
+        </ul>
+
         {/* Dải cho phụ huynh */}
-        <div className="mt-24 grid gap-10 border-t-[3px] border-canvas-ink pt-12 lg:grid-cols-[1fr_1.2fr]">
+        <div className="mt-20 grid gap-10 border-t-[3px] border-canvas-ink pt-12 md:mt-24 lg:grid-cols-[1fr_1.2fr]">
           <div>
-            <h3 className="apron text-[clamp(2.75rem,6vw,5rem)]">Cho con bạn.</h3>
+            <h3 className="apron t-sub">Cho con bạn.</h3>
             <p className="mt-4 max-w-[28rem] text-lg leading-relaxed text-canvas-mute">
               Ba điều phụ huynh của vận động viên nhỏ tuổi nên biết trước khi đặt.
             </p>

@@ -133,13 +133,19 @@ a { text-underline-offset: 0.22em; }
   font-stretch: 62%;
   font-weight: 900;
   text-transform: uppercase;
-  /* đủ chỗ cho dấu chồng tiếng Việt (Ầ, Ặ, Ữ) giữa các dòng */
-  line-height: 0.94;
-  letter-spacing: -0.005em;
-  word-spacing: 0.1em;
+  /* Archivo 62%: chữ hoa cao 0.69em, dấu chồng (Ầ, Ấ) lên tới 1.05em, dấu nặng (Ạ) xuống 0.19em.
+     1.15 giữ dấu nặng dòng trên tách khỏi dấu mũ dòng dưới (Ạ trên Ê cần ≥1.08) */
+  line-height: 1.15;
+  letter-spacing: 0;
+  word-spacing: 0.08em;
   text-wrap: balance;
-  padding-top: 0.06em;
+  padding-top: 0.04em;
 }
+/* Thang chữ apron: một bậc cho mỗi vai trò, trần 6rem */
+.t-display  { font-size: clamp(2.75rem, 6vw, 6rem); }      /* h1 trang chủ */
+.t-page     { font-size: clamp(2.5rem, 5.2vw, 5rem); }     /* h1 trang con */
+.t-headline { font-size: clamp(2.25rem, 4.4vw, 4.25rem); } /* h2 của section */
+.t-sub      { font-size: clamp(1.875rem, 3.2vw, 3rem); }   /* h2/h3 phụ, khép trang */
 .placard {
   font-family: var(--font-heading);
   font-stretch: 75%;
@@ -324,20 +330,9 @@ a { text-underline-offset: 0.22em; }
 /* ─── Chuyển động: mọi thứ đứng yên nếu người dùng xin giảm ─────── */
 @keyframes rope-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes lights-on { from { filter: brightness(0.35) saturate(0.6); } to { filter: none; } }
-@keyframes marquee-left  { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@keyframes marquee-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 
 @media (prefers-reduced-motion: no-preference) {
   .anim-rope { transform-origin: left center; animation: rope-draw 900ms var(--ease-out-expo) both; }
   .anim-lights { animation: lights-on 1400ms var(--ease-out-expo) both; }
-  .marquee-track { animation: marquee-left var(--marquee-duration, 60s) linear infinite; }
-  .marquee-track.reverse { animation-name: marquee-right; }
   .floor-flood { transition: background-color 700ms var(--ease-out-expo), color 400ms ease; }
-  .marquee:hover .marquee-track,
-  .marquee:focus-within .marquee-track { animation-play-state: paused; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee { overflow-x: auto; scroll-snap-type: x mandatory; }
-  .marquee-track > * { scroll-snap-align: start; }
-  .marquee-dup { display: none; }
 }

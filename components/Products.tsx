@@ -40,7 +40,7 @@ export default function Products() {
     <section aria-labelledby="products-title" className="on-canvas relative bg-canvas py-24 text-canvas-ink md:py-32">
       <span aria-hidden="true" className="rope rope-red absolute inset-x-0 top-0 rounded-none" />
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
-        <h2 id="products-title" className="apron text-[clamp(3rem,8.5vw,7.5rem)]">Không có size S/M/L.</h2>
+        <h2 id="products-title" className="apron t-headline">Không có size S/M/L.</h2>
         <p className="mt-6 max-w-[38rem] text-lg leading-relaxed text-canvas-mute">
           Hai dòng LIGHT và PRO, cả hai đều làm theo hàm trên của bạn từ dữ liệu scan 3D. Khác nhau ở số lớp EVA và môn bạn tập.
         </p>
@@ -52,7 +52,7 @@ export default function Products() {
               <article className="flex flex-col">
                 <div className="flex items-end justify-between gap-4">
                   <div>
-                    <h3 className="apron text-[clamp(4.5rem,9vw,8rem)]">{line.name}</h3>
+                    <h3 className="apron text-[clamp(3.25rem,6vw,5.5rem)]">{line.name}</h3>
                     <p className="placard mt-1 text-lg text-canvas-mute">{line.tagline}</p>
                   </div>
                   <p className="text-right">

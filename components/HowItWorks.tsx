@@ -1,20 +1,17 @@
-'use client'
-
-import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { photo, type Photo } from '@/data/photos'
 import { ZALO_URL } from '@/lib/site'
 import PhotoSlot from './ring/PhotoSlot'
 import { ZaloIcon } from './ring/icons'
 
-type Round = {
+type Step = {
   title: string
   desc: string
   shot?: Photo
   slot?: string
 }
 
-const rounds: Round[] = [
+const steps: Step[] = [
   {
     title: 'Tư vấn',
     desc: 'Nhắn Zalo, Instagram hoặc Facebook. TGG tư vấn dòng LIGHT hay PRO hợp với môn bạn tập.',
@@ -42,123 +39,59 @@ const rounds: Round[] = [
   },
 ]
 
-// Đội góc của bạn: 5 hiệp từ lúc nhắn tin đến lúc nhận guard
+// Quy trình: năm bước đọc từ trái sang phải, một sợi dây nối các số bước
 export default function HowItWorks() {
-  const [active, setActive] = useState(0)
-  const items = useRef<(HTMLLIElement | null)[]>([])
-
-  // Hiệp hiện tại = bước cuối cùng đã vượt qua giữa màn hình; phía trên bước 1 luôn là Hiệp 1
-  useEffect(() => {
-    let frame = 0
-    const update = () => {
-      frame = 0
-      const mid = window.innerHeight / 2
-      let next = 0
-      items.current.forEach((el, i) => {
-        if (el && el.getBoundingClientRect().top < mid) next = i
-      })
-      setActive(next)
-    }
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-    }
-  }, [])
-
   return (
-    <section id="quy-trinh" aria-labelledby="corner-title" className="relative scroll-mt-20 bg-arena py-24 md:py-32">
+    <section id="quy-trinh" aria-labelledby="steps-title" className="relative scroll-mt-20 bg-arena py-24 md:py-32">
       <span aria-hidden="true" className="rope rope-white absolute inset-x-0 top-0 rounded-none opacity-80" />
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
-        <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-          {/* Cột trái ghim lại: đồng hồ hiệp */}
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <h2 id="corner-title" className="apron text-[clamp(3rem,8vw,7rem)] text-arena-ink">
-              Đội góc
-              <span className="block text-corner">của bạn.</span>
-            </h2>
-            <p className="mt-6 max-w-[30rem] text-lg leading-relaxed text-arena-mute">
-              Giữa hiệp, đội góc giữ mouthguard cho bạn. Trước trận, Khai Nguyên Dental Lab làm ra nó: năm hiệp, từ tin nhắn đầu
-              tiên đến lúc guard nằm trong tay bạn.
-            </p>
-
-            <div className="mt-10 hidden lg:block" aria-hidden="true">
-              <p className="placard tabular text-arena-mute">
-                <span className="apron text-[5.5rem] text-arena-ink">Hiệp&nbsp;{active + 1}</span>
-                <span className="ml-3 text-2xl">/ 5</span>
-              </p>
-              <div className="mt-4 grid grid-cols-5 gap-2">
-                {rounds.map((r, i) => (
-                  <span
-                    key={r.title}
-                    className={`rope transition-[background-color,opacity] duration-500 ${i <= active ? 'rope-blue' : 'rope-white opacity-25'}`}
-                  />
-                ))}
-              </div>
-              <p className="placard mt-4 text-2xl text-arena-ink">{rounds[active].title}</p>
-            </div>
-
-            <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad mt-10">
-              <ZaloIcon />
-              Bắt đầu hiệp 1
-            </a>
-          </div>
-
+        <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
           <div>
-          {/* Đồng hồ hiệp gọn cho điện thoại, ghim dưới menu */}
-          <div className="sticky top-16 z-20 -mx-4 mb-8 bg-arena/95 px-4 pb-3 pt-3 backdrop-blur-sm lg:hidden" aria-hidden="true">
-            <div className="flex items-baseline justify-between">
-              <p className="placard tabular text-xl text-arena-ink">Hiệp {active + 1} / 5</p>
-              <p className="placard text-base text-arena-mute">{rounds[active].title}</p>
-            </div>
-            <div className="mt-2 grid grid-cols-5 gap-1.5">
-              {rounds.map((r, i) => (
-                <span key={r.title} className={`rope transition-opacity duration-500 ${i <= active ? 'rope-blue' : 'rope-white opacity-25'}`} />
-              ))}
-            </div>
+            <h2 id="steps-title" className="apron t-headline text-arena-ink">
+              5 bước.
+              <span className="block text-corner">Từ tin nhắn đến tay bạn.</span>
+            </h2>
+            <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-arena-mute">
+              Khai Nguyên Dental Lab lo phần kỹ thuật. Bạn chỉ cần nhắn tin, đi scan và chọn thiết kế.
+            </p>
           </div>
-          <ol className="flex flex-col gap-16 md:gap-24">
-            {rounds.map((r, i) => (
-              <li key={r.title} data-round={i} ref={(el) => { items.current[i] = el }}>
-                {r.shot ? (
-                  <div className="relative aspect-[3/2] overflow-hidden rounded-[6px] bg-black">
-                    <Image
-                      src={r.shot.src}
-                      alt={r.shot.alt}
-                      fill
-                      placeholder="blur"
-                      blurDataURL={r.shot.blurDataURL}
-                      sizes="(min-width: 1024px) 55vw, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  <PhotoSlot label={r.slot ?? ''} className="aspect-[3/2]" />
-                )}
-                <div className="mt-6 grid gap-3 sm:grid-cols-[8.5rem_1fr] sm:gap-6">
-                  <p className="apron text-5xl text-rope-red">Hiệp&nbsp;{i + 1}</p>
-                  <div>
-                    <h3 className="placard text-3xl text-arena-ink">{r.title}</h3>
-                    <p className="mt-2 max-w-[34rem] text-lg leading-relaxed text-arena-mute">{r.desc}</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
-          </div>
+          <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad hidden self-end lg:inline-flex">
+            <ZaloIcon />
+            Nhắn Zalo để bắt đầu
+          </a>
         </div>
 
-        {/* Ô chờ cho ảnh máy móc lab */}
-        <div className="mt-24 grid gap-4 sm:grid-cols-3">
-          <PhotoSlot label="Máy scan 3D trong miệng" className="aspect-[4/3]" />
-          <PhotoSlot label="Máy ép nhiệt EVA" className="aspect-[4/3]" />
-          <PhotoSlot label="Bàn làm việc và đồ nghề của kỹ thuật viên" className="aspect-[4/3]" />
-        </div>
+        <ol className="mt-14 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:mt-16 lg:grid-cols-5 lg:gap-x-5">
+          {steps.map((s, i) => (
+            <li key={s.title} className="flex flex-col">
+              {/* Số bước + dây nối sang bước kế tiếp */}
+              <div className="flex items-center gap-4" aria-hidden="true">
+                <span className="apron tabular text-5xl leading-none text-corner">{i + 1}</span>
+                <span className={`rope flex-1 ${i === steps.length - 1 ? 'rope-blue' : 'rope-white opacity-25'}`} />
+              </div>
+              {s.shot ? (
+                <div className="relative mt-5 aspect-[3/2] overflow-hidden rounded-[6px] bg-black">
+                  <Image
+                    src={s.shot.src}
+                    alt={s.shot.alt}
+                    fill
+                    placeholder="blur"
+                    blurDataURL={s.shot.blurDataURL}
+                    sizes="(min-width: 1024px) 18vw, (min-width: 640px) 45vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <PhotoSlot label={s.slot ?? ''} className="mt-5 aspect-[3/2] !gap-2 !p-4" />
+              )}
+              <h3 className="placard mt-5 text-2xl text-arena-ink">
+                <span className="sr-only">Bước {i + 1}: </span>
+                {s.title}
+              </h3>
+              <p className="mt-2 text-base leading-relaxed text-arena-mute">{s.desc}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   )
