@@ -1,4 +1,5 @@
 import { ZALO_URL } from '@/lib/site'
+import Carousel from './ring/Carousel'
 import PhotoSlot from './ring/PhotoSlot'
 import { ZaloIcon } from './ring/icons'
 
@@ -14,6 +15,10 @@ const wearers = [
   'VĐV đeo guard PRO khi thi đấu',
   'Khách hàng đeo guard trong buổi tập',
   'VĐV nhỏ tuổi đeo guard LIGHT',
+  'Võ sĩ Muay Thái đeo guard trên sàn',
+  'Khách hàng đeo guard sau trận đấu',
+  'VĐV MMA đeo guard khi sparring',
+  'Cận cảnh nụ cười với guard full custom',
 ]
 
 export default function Athletes() {
@@ -27,13 +32,17 @@ export default function Athletes() {
           </p>
         </div>
 
-        <ul className="mt-12 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
-          {wearers.map((label) => (
-            <li key={label}>
-              <PhotoSlot tone="canvas" label={label} className="aspect-[4/5]" />
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12">
+          <Carousel
+            tone="canvas"
+            label="Ảnh khách hàng đeo guard TGG, dùng nút mũi tên để xem tiếp"
+            itemClassName="w-[72%] sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/4)]"
+          >
+            {wearers.map((label) => (
+              <PhotoSlot key={label} tone="canvas" label={label} className="aspect-[4/5]" />
+            ))}
+          </Carousel>
+        </div>
 
         {/* Dải cho phụ huynh */}
         <div className="mt-20 grid gap-10 border-t-[3px] border-canvas-ink pt-12 md:mt-24 lg:grid-cols-[1fr_1.2fr]">

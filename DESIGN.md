@@ -304,7 +304,7 @@ Every apron size is a class in `globals.css` (`.t-display`, `.t-page`, `.t-headl
 
 ## Elevation & Depth
 
-The system is flat and lit. Depth comes from the arena's darkness, stage light and photography, not from stacked cards. A soft radial "arena light" (`radial-gradient(60% 50% at 70% 8%, rgb(242 244 245 / 0.07), transparent 70%)`) falls from the top of the hero. Hero and page-head photos fade into the black through a left and top mask (18% from the left and 12% at top and bottom on the hero, 30% and 18% on the page head), so the photo reads as full-bleed. On desktop the hero is a `0.9fr 1.1fr` split, vertically centred: headline, lede and corner pad on the left, the 3:2 photo on the right running out to the viewport edge; the promises sit on the rope below. Blurred 95% bars (the nav once scrolled, the mobile bar, the gallery filter bar on arena and the FAQ chip row on canvas) are the only translucent layers. The gallery lightbox is arena at 97%.
+The system is flat and lit. Depth comes from the arena's darkness, stage light and photography, not from stacked cards. A soft radial "arena light" (`radial-gradient(60% 50% at 70% 8%, rgb(242 244 245 / 0.07), transparent 70%)`) falls from the top of the hero. Hero and page-head photos fade into the black through a left and top mask (18% from the left and 12% at top and bottom on the hero, 30% and 18% on the page head), so the photo reads as full-bleed. On desktop the hero is an even two-column split, vertically centred, at least `min(100svh, 50rem)` tall: headline, lede and corner pad on the left, the 3:2 photo on the right inside the container. The four promises sit on the rope below in a four-column grid (two columns on phones), placard at 1.25rem from `md`, each centred in its column from `lg`. Blurred 95% bars (the nav once scrolled, the mobile bar, the gallery filter bar on arena and the FAQ chip row on canvas) are the only translucent layers. The gallery lightbox is arena at 97%.
 
 ### Shadow Vocabulary
 - **Pad padding** (`box-shadow: inset 0 -5px 0 rgb(0 0 0 / 0.18), 0 10px 24px -12px rgb(28 166 223 / 0.55)`): the corner pad only. The inset bottom reads as foam thickness, and the faint blue spill sits under it.
@@ -395,11 +395,14 @@ The section ground floods with the selected PRO EVA colour (700ms background tra
 ### Five Steps (How It Works)
 The process as five plain steps read left to right, with no ring metaphor. Each step opens with an apron numeral (3rem, Corner Blue) followed by a 3px rope running to the next step (white at 25%, the last one blue), then a 3:2 photo or photo slot, a placard title and a 1rem body description. Five columns from `lg`, two from `sm`, one on phones. The section heading sits in a `1fr auto` split with the corner pad on the right from `lg`. On /order the same steps run as a list: a `5rem 1fr` row per step from `sm`, divided by 3px white-at-10% rules.
 
+### Carousel
+The one way to browse a set of photos on the homepage (`components/ring/Carousel.tsx`). Items of equal size sit in a horizontal scroll-snap track (four per view from `lg`, two from `sm`, about 1.25 on phones, 16px gaps), so swiping works on touch. Under the track a 3px progress rope shows which part is on screen (Corner Blue on white-at-15% on arena, ink on Canvas Fold on canvas), and two 48px arrow buttons (6px radius; Arena Lift turning Corner Blue on hover on arena, Canvas Ink on canvas) move one full view at a time. It loops: "next" on the last view returns to the start and "previous" on the first view jumps to the end. Scrolling is smooth only when motion is allowed.
+
 ### Lineup (homepage gallery)
-A static grid of nine studio photos, no motion: four columns from `lg` with the first photo spanning two columns and two rows, two columns below `lg` with the first photo full width. Every tile is a 3:2 link to /gallery with its lettering and colour set over the dark reflection at the bottom (a black-to-transparent scrim). The image scales to 1.04 on hover when motion is allowed. The section has exactly two actions, both rope-links: "Mở toàn bộ gallery" and "Thiết kế chiếc của bạn" (Corner Blue, to /customize).
+A carousel of sixteen studio photos at 3:2, one per EVA base colour where possible, ordered so two of the same colour never sit side by side. Each caption is only the base colour (placard, 1.125rem, Arena Ink) after a 14px swatch dot in that colour. No lettering, order or customer names appear in the caption. The section has exactly two actions, both rope-links: "Mở toàn bộ gallery" and "Thiết kế chiếc của bạn" (Corner Blue, to /customize).
 
 ### Customer Wall
-"Khách hàng đeo guard TGG.": four 4:5 portrait photos of customers wearing their guards (two columns, four from `lg`), on canvas. Until real photos exist each is a canvas Photo Slot naming the shot to come.
+"Khách hàng đeo guard TGG.": a canvas-tone carousel of 4:5 portrait photos of customers wearing their guards. Until real photos exist each item is a canvas Photo Slot naming the shot to come; real photos replace slots one for one.
 
 ### Motion vocabulary
 These belong to the world, not to a component. The ease is `cubic-bezier(0.16, 1, 0.3, 1)`. Ropes draw in from the left over 900ms (staggered 120ms). Arena lights come up on hero and page-head photos over 1400ms (from `brightness(0.35) saturate(0.6)`). The floor floods over 700ms and rope-links pull over 400ms. Controls and fields change colour over 200ms. All of these run only under `prefers-reduced-motion: no-preference`, and smooth scrolling follows the same condition.
@@ -414,7 +417,7 @@ Shipping photos come only from `data/photo-manifest.json` (source path, letterin
 - **Do** use a 3px rope (or a 3px border in a rope colour) for every divider, underline, progress bar and table rule. The only lighter rule is the 1px Canvas Fold between table rows.
 - **Do** put the primary action in a Corner Blue corner pad with Canvas Ink type, and keep the Zalo pad nearest to the thumb on mobile.
 - **Do** set headings in apron (Archivo 62% / 900 / uppercase / 1.15 leading, sizes from the `.t-*` scale), labels and buttons in placard (75% / 800), and sentences at 100%.
-- **Do** show real studio photos at 3:2 on black with 6px corners, captioned with the printed lettering, and use a labelled Photo Slot where a photo is still missing.
+- **Do** show real studio photos at 3:2 on black with 6px corners, captioned with the printed lettering (the homepage gallery carousel shows only the base colour), and use a labelled Photo Slot where a photo is still missing.
 - **Do** keep every interactive target at 44×44px or larger.
 - **Do** give every animation a reduced-motion still, and pause anything that moves on hover and focus.
 - **Do** add `on-canvas` to canvas sections so focus rings, segmented controls and fields turn ink.

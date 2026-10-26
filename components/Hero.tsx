@@ -9,7 +9,7 @@ const hero = photo('champion-boy')
 // Dưới đèn: một chiếc guard thật, có tên, nằm trên mặt kính đen dưới đèn sân đấu
 export default function Hero() {
   return (
-    <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-arena pt-16 md:pt-[72px]">
+    <section className="relative isolate flex flex-col overflow-hidden bg-arena pt-16 md:pt-[72px] lg:min-h-[min(100svh,50rem)]">
       {/* Đèn sân đấu chiếu từ trên xuống */}
       <div
         aria-hidden="true"
@@ -17,8 +17,8 @@ export default function Hero() {
         style={{ background: 'radial-gradient(60% 50% at 70% 8%, rgb(242 244 245 / 0.07), transparent 70%)' }}
       />
 
-      {/* Chữ và ảnh cùng một hàng, căn giữa theo chiều dọc: ảnh không bị tụt xuống đáy */}
-      <div className="mx-auto grid w-full max-w-[1400px] flex-1 content-center items-center gap-8 px-4 pt-8 md:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-6 lg:py-12">
+      {/* Chữ và ảnh chia đôi, căn giữa theo chiều dọc; trên màn lớn section không bị kéo cao quá 50rem */}
+      <div className="mx-auto grid w-full max-w-[1400px] flex-1 content-center items-center gap-8 px-4 pt-8 md:px-8 lg:grid-cols-2 lg:gap-12 lg:py-16">
         <div className="relative z-10">
           <h1 className="apron t-display text-arena-ink">
             Vừa khít răng bạn.
@@ -41,14 +41,14 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Ảnh tràn ra mép phải màn hình, mép trái và trên hoà vào nền đen */}
-        <figure className="relative -mx-4 md:-mx-8 lg:ml-0 lg:mr-[min(-2rem,calc((1400px-100vw)/2-2rem))]">
+        {/* Ảnh nằm trong khung lưới, mép trái và trên/dưới hoà vào nền đen */}
+        <figure className="relative -mx-4 md:-mx-8 lg:mx-0">
           <div
             className="anim-lights relative aspect-[3/2] w-full"
             style={{
-              maskImage: 'linear-gradient(to right, transparent, #000 18%), linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent)',
+              maskImage: 'linear-gradient(to right, transparent, #000 12%), linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent)',
               maskComposite: 'intersect',
-              WebkitMaskImage: 'linear-gradient(to right, transparent, #000 18%), linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, #000 12%), linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent)',
               WebkitMaskComposite: 'source-in',
             }}
           >
@@ -59,11 +59,11 @@ export default function Hero() {
               priority
               placeholder="blur"
               blurDataURL={hero.blurDataURL}
-              sizes="(min-width: 1024px) 60vw, 100vw"
+              sizes="(min-width: 1400px) 680px, (min-width: 1024px) 50vw, 100vw"
               className="object-cover object-[50%_60%]"
             />
           </div>
-          <figcaption className="placard mt-1 px-4 text-right text-sm text-arena-mute md:px-8">
+          <figcaption className="placard mt-1 px-4 text-right text-sm text-arena-mute md:px-8 lg:px-0">
             <span className="text-arena-ink">{hero.lettering}</span> · {hero.color}
           </figcaption>
         </figure>
@@ -72,10 +72,11 @@ export default function Hero() {
       {/* Dây đài dưới cùng: lời hứa dịch vụ nằm trên dây */}
       <div className="relative z-10 mt-8 lg:mt-0">
         <span aria-hidden="true" className="rope rope-white anim-rope rounded-none opacity-80" />
-        <ul className="mx-auto flex max-w-[1400px] flex-wrap gap-x-8 gap-y-2 px-4 py-5 md:px-8">
+        {/* Bốn lời hứa trải đều theo chiều ngang; từ lg mỗi lời hứa căn giữa ô của nó */}
+        <ul className="mx-auto grid max-w-[1400px] grid-cols-2 gap-x-4 gap-y-4 px-4 py-6 md:px-8 lg:grid-cols-4 lg:py-7">
           {PROMISES.map((p) => (
-            <li key={p} className="placard flex items-center gap-2 text-[0.95rem] text-arena-ink">
-              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-corner" />
+            <li key={p} className="placard flex items-center gap-2.5 text-base text-arena-ink md:text-xl lg:justify-center lg:text-center">
+              <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full bg-corner" />
               {p}
             </li>
           ))}

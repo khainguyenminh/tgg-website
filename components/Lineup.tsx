@@ -1,39 +1,26 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { photo, type Photo } from '@/data/photos'
+import { photo } from '@/data/photos'
+import { PRO_COLORS } from './MouthguardDesigner/constants'
+import Carousel from './ring/Carousel'
 import { ArrowIcon } from './ring/icons'
 
-// Chiếc đầu tiên đứng lớn, tám chiếc còn lại xếp quanh nó
-const PICKS = ['raymond', 'tiboom', 'kevin', 'wave', 'thanh-phong', 'mikey', 'rabbit', 'tfcmma', 'anh-khiem'].map(photo)
+// Mỗi màu nền EVA một chiếc, xếp xen kẽ để hai chiếc cùng màu không đứng cạnh nhau
+const PICKS = [
+  'raymond', 'tfcmma', 'kevin', 'thanh-phong', 'mikey', 'tiboom', 'wave', 'rabbit',
+  'hoang-kha', 'mqh', 'demut', 'wukong-green', 'dont-quit', 'destinee', 'anh-khiem', 'nam-quan',
+].map(photo)
 
-function Tile({ p, lead }: { p: Photo; lead?: boolean }) {
-  return (
-    <li className={lead ? 'col-span-2 lg:row-span-2' : ''}>
-      <Link href="/gallery" className={`group relative block overflow-hidden rounded-[6px] bg-black ${lead ? 'aspect-[3/2] lg:aspect-auto lg:h-full' : 'aspect-[3/2]'}`}>
-        <Image
-          src={p.src}
-          alt={p.alt}
-          fill
-          placeholder="blur"
-          blurDataURL={p.blurDataURL}
-          sizes={lead ? '(min-width: 1024px) 50vw, 100vw' : '(min-width: 1024px) 25vw, 50vw'}
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.04]"
-        />
-        {/* Tên in trên guard nằm trên phần phản chiếu tối của mặt kính */}
-        <span className="absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-3 bg-gradient-to-t from-black/80 to-transparent px-3 pb-2.5 pt-8 md:px-4 md:pb-3">
-          <span className={`placard truncate text-arena-ink ${lead ? 'text-xl md:text-2xl' : 'text-base md:text-lg'}`}>
-            {p.lettering || 'Fully Design'}
-          </span>
-          <span className="hidden shrink-0 text-sm text-arena-mute sm:inline">{p.color}</span>
-        </span>
-      </Link>
-    </li>
-  )
+// Chấm màu cạnh tên màu nền; ba màu ngoài bảng 16 màu PRO lấy giá trị gần đúng
+const SWATCH: Record<string, string> = {
+  ...Object.fromEntries(PRO_COLORS.map((c) => [c.name, c.hex])),
+  'Trắng': '#F2F4F5',
+  'Vàng kim': '#C9A13B',
+  'Kim tuyến': '#B8BCC2',
 }
 
-// Lineup: một bức tường nhỏ những chiếc đã làm, mỗi chiếc một cái tên
+// Lineup: băng ảnh cùng kích thước, bấm mũi tên để xem tiếp; chú thích chỉ ghi màu nền EVA
 export default function Lineup() {
-  const [lead, ...rest] = PICKS
   return (
     <section aria-labelledby="lineup-title" className="bg-arena py-24 md:py-32">
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
@@ -60,12 +47,36 @@ export default function Lineup() {
           </div>
         </div>
 
-        <ul className="mt-12 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
-          <Tile p={lead} lead />
-          {rest.map((p) => (
-            <Tile key={p.id} p={p} />
-          ))}
-        </ul>
+        <div className="mt-12">
+          <Carousel
+            label="Ảnh mouthguard đã làm, dùng nút mũi tên để xem tiếp"
+            itemClassName="w-[80%] sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/4)]"
+          >
+            {PICKS.map((p) => (
+              <figure key={p.id}>
+                <div className="relative aspect-[3/2] overflow-hidden rounded-[6px] bg-black">
+                  <Image
+                    src={p.src}
+                    alt={p.alt}
+                    fill
+                    placeholder="blur"
+                    blurDataURL={p.blurDataURL}
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 80vw"
+                    className="object-cover"
+                  />
+                </div>
+                <figcaption className="placard mt-3 flex items-center gap-2.5 text-lg text-arena-ink">
+                  <span
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: SWATCH[p.color] ?? '#696969', boxShadow: 'inset 0 0 0 1.5px rgb(255 255 255 / 0.35)' }}
+                  />
+                  {p.color}
+                </figcaption>
+              </figure>
+            ))}
+          </Carousel>
+        </div>
       </div>
     </section>
   )
