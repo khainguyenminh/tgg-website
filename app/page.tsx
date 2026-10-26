@@ -1,25 +1,31 @@
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
+import Lineup from '@/components/Lineup'
 import Products from '@/components/Products'
-import Benefits from '@/components/Benefits'
+import ColorFloor from '@/components/ColorFloor'
 import HowItWorks from '@/components/HowItWorks'
-import GalleryPreview from '@/components/GalleryPreview'
-import CTABanner from '@/components/CTABanner'
+import Athletes from '@/components/Athletes'
 import FAQPreview from '@/components/FAQPreview'
+import CTABanner from '@/components/CTABanner'
 import Footer from '@/components/Footer'
+import MobileCornerBar from '@/components/ring/MobileCornerBar'
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Navbar />
-      <Hero />
-      <Products />
-      <Benefits />
-      <HowItWorks />
-      <GalleryPreview />
-      <CTABanner />
-      <FAQPreview />
+      <main>
+        <Hero />
+        <Lineup />
+        <Products />
+        <ColorFloor />
+        <HowItWorks />
+        <Athletes />
+        <FAQPreview />
+        <CTABanner />
+      </main>
       <Footer />
-    </main>
+      <MobileCornerBar />
+    </>
   )
 }

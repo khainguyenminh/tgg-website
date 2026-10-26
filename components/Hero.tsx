@@ -1,203 +1,92 @@
-'use client'
-
-import { useEffect, useState, useRef, useCallback } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+import { photo } from '@/data/photos'
+import { PROMISES, ZALO_URL } from '@/lib/site'
+import { ArrowIcon, ZaloIcon } from './ring/icons'
 
-const SLIDES = [
-  {
-    label: 'Custom-fit Mouthguard',
-    h1: 'Bảo vệ đỉnh cao.',
-    h1b: 'Cá nhân hóa hoàn toàn.',
-    sub: 'Từ scan 3D đến sản phẩm hoàn chỉnh trong 2–3 ngày làm việc.',
-    cta1: { label: 'Đặt hàng ngay', href: '/order' },
-    cta2: { label: 'Xem sản phẩm', href: '/products' },
-    trust: 'Scan 3D miễn phí · Ship toàn quốc · 2–3 ngày sản xuất',
-  },
-  {
-    label: 'Guard & Protection PRO',
-    h1: 'Dành cho chiến binh.',
-    h1b: '3 lớp EVA — hấp thụ lực tối đa.',
-    sub: 'Boxing, Muay Thái, MMA — thiết kế full custom với 16 màu tùy chọn.',
-    cta1: { label: 'Xem Guard PRO', href: '/products' },
-    cta2: { label: 'Đặt ngay', href: '/order' },
-    trust: 'Bảo hành fit 1 đổi 1 · Upper arch · Combat-grade EVA',
-  },
-  {
-    label: 'LIGHT & Comfort',
-    h1: 'Nhẹ nhàng hơn.',
-    h1b: 'Bảo vệ không kém.',
-    sub: 'Bóng rổ, bóng đá, gym — 2 lớp EVA mỏng, thoải mái suốt buổi tập.',
-    cta1: { label: 'Xem LIGHT', href: '/products' },
-    cta2: { label: 'Đặt ngay', href: '/order' },
-    trust: 'Trong suốt · Siêu nhẹ · Vừa vặn như đúc',
-  },
-]
+const hero = photo('champion-boy')
 
-const INTERVAL = 5000
-
+// Dưới đèn: một chiếc guard thật, có tên, nằm trên mặt kính đen dưới đèn sân đấu
 export default function Hero() {
-  const [idx, setIdx] = useState(0)
-  const [entered, setEntered] = useState(false)
-  const [textIn, setTextIn] = useState(true)
-  const [paused, setPaused] = useState(false)
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const reducedMotionRef = useRef(false)
-
-  // Entrance animation on mount
-  useEffect(() => {
-    const t = setTimeout(() => setEntered(true), 80)
-    return () => clearTimeout(t)
-  }, [])
-
-  useEffect(() => {
-    reducedMotionRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  }, [])
-
-  // Auto-advance slides — paused on hover/touch, skipped entirely for reduced motion
-  const resetTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current)
-    if (reducedMotionRef.current || paused) return
-    timerRef.current = setInterval(() => {
-      setTextIn(false)
-      setTimeout(() => {
-        setIdx(i => (i + 1) % SLIDES.length)
-        setTextIn(true)
-      }, 350)
-    }, INTERVAL)
-  }, [paused])
-
-  useEffect(() => {
-    resetTimer()
-    return () => { if (timerRef.current) clearInterval(timerRef.current) }
-  }, [resetTimer])
-
-  const goTo = (next: number) => {
-    if (next === idx) return
-    setTextIn(false)
-    setTimeout(() => {
-      setIdx(next)
-      setTextIn(true)
-    }, 300)
-    resetTimer()
-  }
-
-  const slide = SLIDES[idx]
-
-  const enter: React.CSSProperties = {
-    opacity: entered ? 1 : 0,
-    transform: entered ? 'translateY(0)' : 'translateY(20px)',
-    transition: 'opacity 800ms ease, transform 800ms ease',
-  }
-
-  const textFade: React.CSSProperties = {
-    opacity: textIn ? 1 : 0,
-    transform: textIn ? 'translateY(0)' : 'translateY(10px)',
-    transition: 'opacity 350ms ease, transform 350ms ease',
-  }
-
   return (
-    <section
-      className="relative w-full min-h-screen overflow-hidden bg-[#0A1628]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={() => setPaused(true)}
-    >
-
-      {/* Full-bleed background image */}
-      <div className="absolute inset-0" style={enter}>
-        <Image
-          src="/brand/hero-image.png"
-          alt="TGG Custom Mouthguard"
-          fill
-          className="object-cover object-center"
-          priority
-        />
-        {/* Diagonal scrim — dark left for text legibility, fades right */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(105deg, rgba(10,22,40,0.96) 0%, rgba(10,22,40,0.78) 38%, rgba(10,22,40,0.30) 65%, transparent 100%)',
-          }}
-        />
-      </div>
-
-      {/* Site container — text stays within max-w-6xl, image bleeds full */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-5 flex flex-col min-h-screen" style={enter}>
-
-        {/* Text block — left aligned, top */}
-        <div className="flex flex-col gap-5 pt-36 max-w-lg">
-
-          {/* Slide label */}
-          <span
-            className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#60C8F3]"
-            style={textFade}
-          >
-            {slide.label}
-          </span>
-
-          {/* Headline */}
-          <div style={textFade}>
-            <h1 className="font-heading font-black text-5xl md:text-6xl text-white leading-tight">
-              {slide.h1}
-            </h1>
-            <h1 className="font-heading font-black text-5xl md:text-6xl text-[#1CA6DF] leading-tight">
-              {slide.h1b}
-            </h1>
-          </div>
-
-          {/* Sub */}
-          <p className="text-[#CBD5E1] text-sm leading-relaxed max-w-sm" style={textFade}>
-            {slide.sub}
-          </p>
-
-          {/* CTAs */}
-          <div className="flex gap-3 flex-wrap" style={textFade}>
-            <Link
-              href={slide.cta1.href}
-              className="font-bold px-7 py-3 rounded-lg bg-[#1CA6DF] text-white hover:bg-[#1590C2] transition-all hover:scale-105"
-            >
-              {slide.cta1.label}
-            </Link>
-            <Link
-              href={slide.cta2.href}
-              className="font-bold px-7 py-3 rounded-lg border border-white/20 text-[#F1F5F9] hover:bg-white/10 transition-all"
-            >
-              {slide.cta2.label}
-            </Link>
-          </div>
-
-          {/* Trust signals */}
-          <p className="text-[#94A3B8] text-xs tracking-wide" style={textFade}>
-            {slide.trust}
-          </p>
-        </div>
-
-      </div>
-
-      {/* Slide dot indicators — bottom center */}
+    <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-arena pt-16 md:pt-[72px]">
+      {/* Đèn sân đấu chiếu từ trên xuống */}
       <div
-        className="absolute bottom-10 left-0 right-0 z-10 flex justify-center items-center gap-2"
-        style={enter}
-      >
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`Slide ${i + 1}`}
-            style={{
-              width: i === idx ? '28px' : '8px',
-              height: '8px',
-              borderRadius: '4px',
-              background: i === idx ? '#1CA6DF' : 'rgba(255,255,255,0.25)',
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'all 400ms ease',
-              padding: 0,
-            }}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{ background: 'radial-gradient(60% 50% at 70% 8%, rgb(242 244 245 / 0.07), transparent 70%)' }}
+      />
+
+      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 pt-6 md:px-8 md:pt-8">
+        <h1 className="apron text-[clamp(3.4rem,11.5vw,11rem)] text-arena-ink">
+          Vừa khít răng bạn.
+          <span className="block text-corner">Mang tên bạn.</span>
+        </h1>
+        <p className="mt-5 hidden max-w-[25rem] text-lg leading-relaxed text-arena-mute lg:block">
+          Mouthguard custom-fit làm tại <span className="text-arena-ink">Khai Nguyên Dental Lab</span> từ dữ liệu scan 3D răng
+          của chính bạn. Cho boxing, Muay Thái, MMA và các môn không đối kháng.
+        </p>
+      </div>
+
+      {/* Ảnh: trong luồng trên mobile; trên desktop neo phải-dưới, mép hoà vào nền đen nên đọc như tràn khung */}
+      <figure className="relative mt-4 lg:absolute lg:bottom-[6.75rem] lg:right-0 lg:mt-0 lg:h-[60svh] lg:w-[90svh] lg:max-w-[66vw]">
+        <div
+          className="anim-lights relative aspect-[3/2] w-full lg:aspect-auto lg:h-full"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent, #000 16%), linear-gradient(to bottom, transparent, #000 14%)',
+            maskComposite: 'intersect',
+            WebkitMaskImage: 'linear-gradient(to right, transparent, #000 16%), linear-gradient(to bottom, transparent, #000 14%)',
+            WebkitMaskComposite: 'source-in',
+          }}
+        >
+          <Image
+            src={hero.src}
+            alt={hero.alt}
+            fill
+            priority
+            placeholder="blur"
+            blurDataURL={hero.blurDataURL}
+            sizes="(min-width: 1024px) 96svh, 100vw"
+            className="object-cover object-[50%_60%]"
           />
-        ))}
+        </div>
+        <figcaption className="placard absolute bottom-2 right-4 text-sm text-arena-mute md:right-8">
+          <span className="text-arena-ink">{hero.lettering}</span> · {hero.color}
+        </figcaption>
+      </figure>
+
+      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 pt-6 md:px-8 lg:hidden">
+        <p className="text-lg leading-relaxed text-arena-mute">
+          Mouthguard custom-fit làm tại <span className="text-arena-ink">Khai Nguyên Dental Lab</span> từ dữ liệu scan 3D răng
+          của chính bạn. Cho boxing, Muay Thái, MMA và các môn không đối kháng.
+        </p>
+      </div>
+
+      {/* Dây đài dưới cùng: lời hứa nằm trên dây, đệm góc đứng ở góc phải */}
+      <div className="relative z-10 mt-8 lg:mt-auto">
+        <span aria-hidden="true" className="rope rope-white anim-rope rounded-none opacity-80" />
+        <div className="mx-auto flex max-w-[1400px] flex-col-reverse gap-6 px-4 py-5 md:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <ul className="flex flex-wrap gap-x-6 gap-y-1">
+            {PROMISES.map((p) => (
+              <li key={p} className="placard flex items-center gap-2 text-[0.95rem] text-arena-ink">
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-corner" />
+                {p}
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap items-center gap-x-7 gap-y-4 lg:flex-row-reverse">
+            {/* Trên điện thoại thanh đệm góc cố định đã giữ nút Zalo */}
+            <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad corner-pad-lg hidden lg:inline-flex">
+              <ZaloIcon className="h-6 w-6" />
+              Nhắn Zalo tư vấn
+            </a>
+            <Link href="/gallery" className="rope-link placard inline-flex items-center gap-2 text-lg text-arena-ink">
+              Xem 174+ chiếc đã làm
+              <ArrowIcon />
+            </Link>
+          </div>
+        </div>
+        <span aria-hidden="true" className="rope rope-blue anim-rope rounded-none [animation-delay:120ms]" />
       </div>
     </section>
   )

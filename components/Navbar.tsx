@@ -4,14 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-
-const NAV_LINKS = [
-  { label: 'Sản phẩm', href: '/products' },
-  { label: 'Gallery', href: '/gallery' },
-  { label: 'Quy trình', href: '/order' },
-  { label: 'Tự thiết kế', href: '/customize' },
-  { label: 'FAQ', href: '/faq' },
-]
+import { NAV_LINKS, ZALO_URL } from '@/lib/site'
+import { ZaloIcon } from './ring/icons'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -19,124 +13,105 @@ export default function Navbar() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
+    const handleScroll = () => setScrolled(window.scrollY > 24)
+    handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close menu on route change
+  // Khoá cuộn + Esc để đóng khi menu mobile mở
   useEffect(() => {
-    setMenuOpen(false)
-  }, [pathname])
+    if (!menuOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prev
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [menuOpen])
+
+  const solid = scrolled || menuOpen
 
   return (
-    <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled || menuOpen
-            ? 'bg-[#0A1628]/95 backdrop-blur-md border-b border-[#1E3350]'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-6">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color] duration-300 ${
+        solid ? 'bg-arena/95 backdrop-blur-sm' : 'bg-transparent'
+      }`}
+    >
+      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-4 md:h-[72px] md:px-8">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="The Guard Guy, trang chủ">
+          <Image src="/brand/logo-icon.png" alt="" width={29} height={34} priority />
+          <span className="placard text-[1.05rem] text-arena-ink">
+            The <span className="text-corner">Guard</span> Guy
+          </span>
+        </Link>
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <Image
-              src="/brand/logo-icon.png"
-              alt="TGG"
-              width={32}
-              height={32}
-              className="object-contain"
-            />
-            <span className="font-heading font-black text-white text-base tracking-wide hidden sm:block">
-              THE GUARD GUY
-            </span>
-          </Link>
-
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                    isActive
-                      ? 'text-[#1CA6DF] bg-[#1CA6DF]/10'
-                      : 'text-[#94A3B8] hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* Desktop CTA + mobile hamburger */}
-          <div className="flex items-center gap-3">
-            <a
-              href="https://zalo.me/0975580253"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-1.5 bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold text-sm px-4 py-2 rounded-lg transition-all"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.09-1.35A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.66 0-3.22-.46-4.54-1.26l-.32-.19-3.02.8.81-2.96-.21-.34A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
-              </svg>
-              Nhắn Zalo
-            </a>
-
-            {/* Hamburger */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
-              className="md:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5 rounded-lg hover:bg-white/5 transition-all"
-            >
-              <span className={`block w-5 h-0.5 bg-white transition-all duration-200 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-              <span className={`block w-5 h-0.5 bg-white transition-all duration-200 ${menuOpen ? 'opacity-0' : ''}`} />
-              <span className={`block w-5 h-0.5 bg-white transition-all duration-200 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-            </button>
-          </div>
-
-        </div>
-
-        {/* Mobile dropdown menu */}
-        {menuOpen && (
-          <div className="md:hidden border-t border-[#1E3350] bg-[#0A1628]/98 backdrop-blur-md px-5 py-4 space-y-1">
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`block px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                    isActive
-                      ? 'text-[#1CA6DF] bg-[#1CA6DF]/10'
-                      : 'text-[#94A3B8] hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
-            <div className="pt-2 border-t border-[#1E3350] mt-2">
-              <a
-                href="https://zalo.me/0975580253"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold text-sm px-4 py-3 rounded-xl transition-all"
+        <nav aria-label="Chính" className="hidden items-center gap-7 lg:flex">
+          {NAV_LINKS.map((link) => {
+            const active = pathname === link.href
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? 'page' : undefined}
+                className={`placard relative py-2 text-[0.95rem] transition-colors ${
+                  active ? 'text-arena-ink' : 'text-arena-mute hover:text-arena-ink'
+                }`}
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.09-1.35A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.66 0-3.22-.46-4.54-1.26l-.32-.19-3.02.8.81-2.96-.21-.34A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
-                </svg>
-                Nhắn Zalo ngay
-              </a>
-            </div>
-          </div>
-        )}
-      </header>
-    </>
+                {link.label}
+                {active && <span className="rope rope-blue absolute inset-x-0 -bottom-0.5" aria-hidden="true" />}
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad corner-pad-sm hidden sm:inline-flex">
+            <ZaloIcon className="h-[18px] w-[18px]" />
+            Nhắn Zalo
+          </a>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Đóng menu' : 'Mở menu'}
+            className="flex h-11 w-11 flex-col items-center justify-center gap-[7px] rounded-md text-arena-ink lg:hidden"
+          >
+            <span className={`rope rope-white w-6 transition-transform duration-200 ${menuOpen ? 'translate-y-[10px] rotate-45' : ''}`} />
+            <span className={`rope rope-blue w-6 transition-opacity duration-200 ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`rope rope-red w-6 transition-transform duration-200 ${menuOpen ? '-translate-y-[10px] -rotate-45' : ''}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Dây đài trên cùng: logo và menu đứng trên sợi dây này */}
+      <span aria-hidden="true" className="rope rope-blue anim-rope absolute inset-x-0 bottom-0 rounded-none" />
+
+      {menuOpen && (
+        <div id="mobile-menu" className="fixed inset-x-0 bottom-0 top-16 flex flex-col overflow-y-auto bg-arena px-4 pb-8 pt-4 lg:hidden">
+          <nav aria-label="Chính (di động)" className="flex flex-col">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`apron border-b-[3px] border-white/10 py-4 text-[3.25rem] ${
+                  pathname === link.href ? 'text-corner' : 'text-arena-ink'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad corner-pad-lg mt-8 w-full">
+            <ZaloIcon className="h-6 w-6" />
+            Nhắn Zalo tư vấn
+          </a>
+        </div>
+      )}
+    </header>
   )
 }
