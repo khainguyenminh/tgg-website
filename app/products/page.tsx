@@ -1,399 +1,309 @@
-'use client'
-
-import { useState } from 'react'
-import Link from 'next/link'
+import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import PageHead from '@/components/ring/PageHead'
+import ZaloClose from '@/components/ring/ZaloClose'
+import CrossSection from '@/components/ring/CrossSection'
+import MobileCornerBar from '@/components/ring/MobileCornerBar'
+import { ArrowIcon } from '@/components/ring/icons'
+import { photo, type Photo } from '@/data/photos'
+import { PROMISES } from '@/lib/site'
 
-// ── Data ──────────────────────────────────────────────────────────────────────
+export const metadata: Metadata = {
+  title: 'Sản phẩm LIGHT & PRO — The Guard Guy',
+  description: 'Hai dòng mouthguard custom-fit theo khuôn răng thật: LIGHT 2 lớp EVA cho vận động, PRO 3 lớp EVA cho đối kháng. Bảng giá và so sánh.',
+}
 
-const LIGHT_PACKAGES = [
-  {
-    id: 'base',
-    name: 'BASE',
-    price: '1.400.000đ',
-    highlight: false,
-    includes: [
-      'Scan 3D miễn phí',
-      'Vật liệu EVA an toàn',
-      'Sản xuất riêng theo khuôn răng',
-      'Màu trong suốt (clear)',
-    ],
-  },
-  {
-    id: 'custom',
-    name: 'CUSTOM TEXT',
-    price: '1.500.000đ',
-    highlight: true,
-    includes: [
-      'Tất cả gói BASE',
-      'Thêm tên, số, logo không giới hạn',
-      'Lên 3D thiết kế miễn phí',
-      'Preview 2D trước sản xuất',
-    ],
-  },
-  {
-    id: 'full',
-    name: 'FULLY DESIGN',
-    price: '1.600.000đ',
-    highlight: false,
-    includes: [
-      'Tất cả gói CUSTOM TEXT',
-      'Cá nhân hóa hoàn toàn',
-      'Hiệu ứng đặc biệt (tráng gương, đính đá…)',
-      'Artwork tùy ý',
-    ],
-  },
+// ── Dữ liệu ──────────────────────────────────────────────────────────────────
+
+type Pkg = { id: string; name: string; price: string; recommended?: boolean; includes: string[] }
+
+const LIGHT_PACKAGES: Pkg[] = [
+  { id: 'base', name: 'Base', price: '1.400.000đ', includes: ['Scan 3D miễn phí', 'Vật liệu EVA an toàn', 'Sản xuất riêng theo khuôn răng', 'Màu trong suốt'] },
+  { id: 'custom', name: 'Custom Text', price: '1.500.000đ', recommended: true, includes: ['Tất cả gói Base', 'Thêm tên, số, logo không giới hạn', 'Lên 3D thiết kế miễn phí', 'Preview 2D trước sản xuất'] },
+  { id: 'full', name: 'Fully Design', price: '1.600.000đ', includes: ['Tất cả gói Custom Text', 'Cá nhân hóa hoàn toàn', 'Hiệu ứng đặc biệt (tráng gương, đính đá…)', 'Artwork tùy ý'] },
 ]
 
-const PRO_PACKAGES = [
-  {
-    id: 'base-pro',
-    name: 'BASE PRO',
-    price: '1.800.000đ',
-    highlight: false,
-    includes: [
-      'Scan 3D miễn phí',
-      'Vật liệu EVA chắc, dẻo 3 lớp',
-      'Sản xuất riêng theo khuôn răng',
-      '16 màu lựa chọn',
-    ],
-  },
-  {
-    id: 'custom-pro',
-    name: 'CUSTOM TEXT PRO',
-    price: '1.900.000đ',
-    highlight: true,
-    includes: [
-      'Tất cả gói BASE PRO',
-      'Thêm tên, số, logo không giới hạn',
-      'Lên 3D thiết kế miễn phí',
-      'Preview 2D trước sản xuất',
-    ],
-  },
-  {
-    id: 'full-pro',
-    name: 'FULLY DESIGN PRO',
-    price: '2.000.000đ',
-    highlight: false,
-    includes: [
-      'Tất cả gói CUSTOM TEXT PRO',
-      'Cá nhân hóa hoàn toàn',
-      'Hiệu ứng đặc biệt (tráng gương, đính đá…)',
-      'Artwork tùy ý',
-    ],
-  },
+const PRO_PACKAGES: Pkg[] = [
+  { id: 'base-pro', name: 'Base PRO', price: '1.800.000đ', includes: ['Scan 3D miễn phí', 'Vật liệu EVA chắc, dẻo 3 lớp', 'Sản xuất riêng theo khuôn răng', '16 màu lựa chọn'] },
+  { id: 'custom-pro', name: 'Custom Text PRO', price: '1.900.000đ', recommended: true, includes: ['Tất cả gói Base PRO', 'Thêm tên, số, logo không giới hạn', 'Lên 3D thiết kế miễn phí', 'Preview 2D trước sản xuất'] },
+  { id: 'full-pro', name: 'Fully Design PRO', price: '2.000.000đ', includes: ['Tất cả gói Custom Text PRO', 'Cá nhân hóa hoàn toàn', 'Hiệu ứng đặc biệt (tráng gương, đính đá…)', 'Artwork tùy ý'] },
 ]
 
-const COMPARISON_ROWS = [
+const COMPARISON = [
   { label: 'Cấu tạo', light: '2 lớp EVA mỏng', pro: '3 lớp EVA dày' },
-  { label: 'Mức bảo vệ', light: 'Tiêu chuẩn', pro: 'Tối đa' },
-  { label: 'Phù hợp cho', light: 'Thể thao không đối kháng', pro: 'Combat sports' },
-  { label: 'Màu sắc', light: 'Trong suốt (1 màu)', pro: '16 màu' },
-  { label: 'Cá nhân hóa', light: '✓ Có gói Custom', pro: '✓ Có gói Custom' },
-  { label: 'Hàm', light: 'Upper (hàm trên)', pro: 'Upper (hàm trên)' },
-  { label: 'Scan 3D', light: '✓ Miễn phí', pro: '✓ Miễn phí' },
-  { label: 'Ship', light: '✓ Miễn phí toàn quốc', pro: '✓ Miễn phí toàn quốc' },
-  { label: 'Lead time', light: '2–3 ngày làm việc', pro: '2–3 ngày làm việc' },
-  { label: 'Giá từ', light: '1.400.000đ', pro: '1.800.000đ', highlight: true },
+  { label: 'Mức bảo vệ', light: 'Tiêu chuẩn', pro: 'Cao hơn, cho va chạm mạnh' },
+  { label: 'Phù hợp cho', light: 'Thể thao không đối kháng', pro: 'Các môn đối kháng' },
+  { label: 'Màu sắc', light: 'Trong suốt', pro: '16 màu EVA' },
+  { label: 'Cá nhân hóa', light: 'Có gói Custom', pro: 'Có gói Custom' },
+  { label: 'Hàm', light: 'Hàm trên', pro: 'Hàm trên' },
+  { label: 'Scan 3D', light: 'Miễn phí', pro: 'Miễn phí' },
+  { label: 'Ship', light: 'Miễn phí toàn quốc', pro: 'Miễn phí toàn quốc' },
+  { label: 'Thời gian sản xuất', light: '2–3 ngày làm việc', pro: '2–3 ngày làm việc' },
+  { label: 'Giá từ', light: '1.400.000đ', pro: '1.800.000đ' },
 ]
 
-// ── Package card ──────────────────────────────────────────────────────────────
+type Line = {
+  key: 'pro' | 'light'
+  name: string
+  tagline: string
+  lede: string
+  sports: string[]
+  layers: 2 | 3
+  strengths: { title: string; desc: string }[]
+  shots: Photo[]
+  packages: Pkg[]
+}
 
-function PackageCard({
-  pkg,
-  line,
-}: {
-  pkg: (typeof LIGHT_PACKAGES)[0]
-  line: Tab
-}) {
+const PRO: Line = {
+  key: 'pro',
+  name: 'PRO',
+  tagline: 'Guard & Protection',
+  lede: 'Dành cho các môn đối kháng. 3 lớp EVA dày chịu lực tác động trực tiếp từ nắm đấm và đòn đá. 16 màu, cá nhân hóa tự do.',
+  sports: ['Boxing', 'Muay Thái', 'MMA', 'Kickboxing', 'Jiu-Jitsu', 'Judo', 'Grappling'],
+  layers: 3,
+  strengths: [
+    { title: '3 lớp EVA dày', desc: 'Hấp thụ lực va chạm khi tập và thi đấu đối kháng.' },
+    { title: 'Giữ chắc khi va chạm', desc: 'Custom-fit theo khuôn răng, giữ chắc kể cả khi chịu cú đấm bất ngờ.' },
+    { title: '16 màu EVA', desc: 'Thể hiện cá tính hoặc màu đồng phục đội, không còn máng trắng nhàm chán.' },
+    { title: 'Cá nhân hóa tự do', desc: 'Tên, số, logo, artwork theo yêu cầu, có bản thiết kế xem trước khi sản xuất.' },
+  ],
+  shots: [photo('kien-cuong'), photo('tfcmma'), photo('dvn')],
+  packages: PRO_PACKAGES,
+}
+
+const LIGHT: Line = {
+  key: 'light',
+  name: 'LIGHT',
+  tagline: 'Light & Comfort',
+  lede: 'Dành cho thể thao vận động. 2 lớp EVA mỏng: nhẹ, thoáng, ít cản thở. Trong suốt, gần như không thấy khi đeo.',
+  sports: ['Bóng rổ', 'Bóng đá', 'Gym / Fitness', 'Bóng chuyền', 'Trượt ván', 'Xe đạp'],
+  layers: 2,
+  strengths: [
+    { title: 'Mỏng và nhẹ', desc: '2 lớp EVA mỏng, không cảm giác cồng kềnh, dễ quen ngay từ buổi đầu.' },
+    { title: 'Thoáng khí', desc: 'Ít cản thở và giao tiếp khi thi đấu, tập trung vào hiệu suất.' },
+    { title: 'Trong suốt', desc: 'Một màu trong suốt, không thay đổi ngoại hình khi đeo.' },
+    { title: 'Vừa khít', desc: 'Custom-fit theo khuôn răng, không phải cắn giữ như máng đại trà.' },
+  ],
+  shots: [photo('lab-light-on-model'), photo('lab-light-clear'), photo('lab-glove-check')],
+  packages: LIGHT_PACKAGES,
+}
+
+// Chú thích ảnh: chữ in trên guard, hoặc mô tả ngắn với ảnh lab
+const LAB_CAPTIONS: Record<string, string> = {
+  'lab-light-on-model': 'LIGHT trong suốt trên mẫu hàm',
+  'lab-light-clear': 'LIGHT sau khi ép nhiệt',
+  'lab-glove-check': 'Kiểm tra mép guard trước khi giao',
+}
+
+function Caption({ p, ink, mute }: { p: Photo; ink: string; mute: string }) {
   return (
-    <div
-      className={`relative rounded-2xl border p-6 flex flex-col gap-5 transition-all ${
-        pkg.highlight
-          ? 'border-[#1CA6DF] bg-[#0F1F38]'
-          : 'border-[#1E3350] bg-[#152035]'
-      }`}
-    >
-      {pkg.highlight && (
-        <span className="absolute -top-3 left-6 bg-[#1CA6DF] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-          Khuyên dùng
-        </span>
+    <figcaption className={`placard mt-2 text-sm ${mute}`}>
+      {p.lettering ? (
+        <>
+          <span className={ink}>{p.lettering}</span> · {p.color}
+        </>
+      ) : (
+        LAB_CAPTIONS[p.id] ?? p.alt
       )}
-
-      <div>
-        <p className="text-xs font-bold text-[#1CA6DF] uppercase tracking-widest mb-1">
-          {pkg.name}
-        </p>
-        <p className="font-heading font-black text-3xl text-white">{pkg.price}</p>
-      </div>
-
-      <ul className="space-y-2.5 flex-1">
-        {pkg.includes.map((item) => (
-          <li key={item} className="flex items-start gap-2 text-sm text-[#94A3B8]">
-            <svg className="w-4 h-4 text-[#1CA6DF] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-            {item}
-          </li>
-        ))}
-      </ul>
-
-      <Link
-        href={`/order?line=${line}&pkg=${pkg.id}#order-form`}
-        className={`w-full text-center font-bold py-3 rounded-xl transition-all text-sm ${
-          pkg.highlight
-            ? 'bg-[#1CA6DF] hover:bg-[#1590C2] text-white'
-            : 'bg-[#1E3350] hover:bg-[#1CA6DF]/20 text-[#1CA6DF] border border-[#1CA6DF]/30'
-        }`}
-      >
-        Đặt gói này
-      </Link>
-    </div>
+    </figcaption>
   )
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Khối một dòng sản phẩm ───────────────────────────────────────────────────
 
-type Tab = 'light' | 'pro'
-
-export default function ProductsPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('pro')
+function LineSection({ line }: { line: Line }) {
+  const arena = line.key === 'pro'
+  const ink = arena ? 'text-arena-ink' : 'text-canvas-ink'
+  const mute = arena ? 'text-arena-mute' : 'text-canvas-mute'
+  const rule = arena ? 'border-white/15' : 'border-canvas-deep'
+  const bar = arena ? 'bg-arena-ink' : 'bg-canvas-ink'
 
   return (
-    <div style={{ backgroundColor: '#0A1628', minHeight: '100vh' }}>
-      <Navbar />
-
-      {/* ── Hero ── */}
-      <section className="pt-32 pb-16 px-6 text-center">
-        <span className="text-xs font-bold text-[#1CA6DF] uppercase tracking-widest">Sản phẩm</span>
-        <h1 className="font-heading font-black text-4xl md:text-6xl text-white mt-3 mb-4 leading-tight">
-          Hai dòng · Một tiêu chuẩn
-        </h1>
-        <p className="text-[#94A3B8] text-lg max-w-xl mx-auto">
-          Custom-fit hoàn toàn từ khuôn răng thực tế — không boil-and-bite, không size chung.
-        </p>
-        <div className="flex flex-wrap gap-4 justify-center mt-8 text-sm">
-          {['Scan 3D miễn phí', 'Ship miễn phí toàn quốc', 'Nhận hàng 2–3 ngày'].map((tag) => (
-            <span key={tag} className="flex items-center gap-1.5 text-[#94A3B8]">
-              <span className="text-[#1CA6DF]">✓</span> {tag}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Product line tabs ── */}
-      <section className="px-6 pb-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex gap-3 justify-center">
-            {(['pro', 'light'] as Tab[]).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-8 py-3 rounded-xl font-bold text-sm transition-all border ${
-                  activeTab === tab
-                    ? 'bg-[#1CA6DF] text-white border-[#1CA6DF]'
-                    : 'bg-[#152035] text-[#94A3B8] border-[#1E3350] hover:border-[#1CA6DF]/50 hover:text-white'
-                }`}
-              >
-                {tab === 'pro' ? 'Guard & Protection (PRO)' : 'LIGHT & Comfort'}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Product detail ── */}
-      {activeTab === 'pro' ? (
-        <section className="px-6 py-12">
-          <div className="max-w-5xl mx-auto">
-
-            {/* Header */}
-            <div className="text-center mb-10">
-              <h2 className="font-heading font-black text-4xl md:text-5xl text-white mb-3">
-                Guard & Protection
-                <span className="text-[#1CA6DF] ml-3">PRO</span>
-              </h2>
-              <p className="text-[#94A3B8] max-w-2xl mx-auto">
-                Dành cho combat sports. 3 lớp EVA dày — chịu được lực tác động trực tiếp từ nắm đấm và đòn đá.
-                16 màu, cá nhân hóa tự do.
-              </p>
-            </div>
-
-            {/* Sports tags */}
-            <div className="flex flex-wrap gap-2 justify-center mb-12">
-              {['Boxing', 'Muay Thái', 'MMA', 'Kickboxing', 'Jiu-Jitsu', 'Judo', 'Grappling'].map((s) => (
-                <span key={s} className="px-3 py-1.5 rounded-full bg-[#152035] border border-[#1E3350] text-[#94A3B8] text-xs font-semibold">
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            {/* Key strengths */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-14">
-              {[
-                { icon: '🛡️', title: 'Bảo vệ tối đa', desc: '3 lớp EVA dày hấp thụ lực va chạm hiệu quả khi thi đấu' },
-                { icon: '🔒', title: 'Không bao giờ tuột', desc: 'Custom-fit theo khuôn răng — giữ chắc kể cả khi chịu cú đấm bất ngờ' },
-                { icon: '🎨', title: '16 màu', desc: 'Thể hiện cá tính hoặc màu đồng phục đội — không còn máng trắng nhàm chán' },
-                { icon: '✍️', title: 'Cá nhân hóa tự do', desc: 'Tên, số, logo, artwork theo yêu cầu — giao design preview trước khi sản xuất' },
-              ].map((item) => (
-                <div key={item.title} className="flex gap-4 p-5 bg-[#152035] border border-[#1E3350] rounded-xl">
-                  <span className="text-2xl flex-shrink-0">{item.icon}</span>
-                  <div>
-                    <p className="font-semibold text-white text-sm mb-1">{item.title}</p>
-                    <p className="text-[#94A3B8] text-sm leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Packages */}
-            <h3 className="font-heading font-black text-2xl text-white text-center mb-6">
-              Chọn gói phù hợp
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {PRO_PACKAGES.map((pkg) => (
-                <PackageCard key={pkg.id} pkg={pkg} line="pro" />
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : (
-        <section className="px-6 py-12">
-          <div className="max-w-5xl mx-auto">
-
-            {/* Header */}
-            <div className="text-center mb-10">
-              <h2 className="font-heading font-black text-4xl md:text-5xl text-white mb-3">
-                LIGHT
-                <span className="text-[#1CA6DF] ml-3">& Comfort</span>
-              </h2>
-              <p className="text-[#94A3B8] max-w-2xl mx-auto">
-                Dành cho thể thao vận động. 2 lớp EVA mỏng — nhẹ, thoáng, ít cản thở.
-                Trong suốt, tàng hình khi đeo.
-              </p>
-            </div>
-
-            {/* Sports tags */}
-            <div className="flex flex-wrap gap-2 justify-center mb-12">
-              {['Bóng rổ', 'Bóng đá', 'Gym / Fitness', 'Bóng chuyền', 'Trượt ván', 'Xe đạp'].map((s) => (
-                <span key={s} className="px-3 py-1.5 rounded-full bg-[#152035] border border-[#1E3350] text-[#94A3B8] text-xs font-semibold">
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            {/* Key strengths */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-14">
-              {[
-                { icon: '🪶', title: 'Mỏng & nhẹ', desc: '2 lớp EVA mỏng — không cảm giác cồng kềnh, dễ quen ngay từ buổi đầu' },
-                { icon: '💨', title: 'Thoáng khí', desc: 'Ít cản thở và giao tiếp khi thi đấu — tập trung vào hiệu suất' },
-                { icon: '👁️', title: 'Tàng hình', desc: 'Chỉ 1 màu trong suốt — không thay đổi ngoại hình khi đeo' },
-                { icon: '🔒', title: 'Fit hoàn hảo', desc: 'Custom-fit theo khuôn răng — không cắn giữ, không tuột như máng đại trà' },
-              ].map((item) => (
-                <div key={item.title} className="flex gap-4 p-5 bg-[#152035] border border-[#1E3350] rounded-xl">
-                  <span className="text-2xl flex-shrink-0">{item.icon}</span>
-                  <div>
-                    <p className="font-semibold text-white text-sm mb-1">{item.title}</p>
-                    <p className="text-[#94A3B8] text-sm leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Packages */}
-            <h3 className="font-heading font-black text-2xl text-white text-center mb-6">
-              Chọn gói phù hợp
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {LIGHT_PACKAGES.map((pkg) => (
-                <PackageCard key={pkg.id} pkg={pkg} line="light" />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── Comparison table ── */}
-      <section className="bg-[#0F1F38] py-20 px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold text-[#1CA6DF] uppercase tracking-widest">So sánh</span>
-            <h2 className="font-heading font-black text-3xl md:text-4xl text-white mt-3">
-              LIGHT vs PRO — một cái nhìn
-            </h2>
-          </div>
-
-          <div className="rounded-2xl border border-[#1E3350] overflow-hidden">
-            {/* Table header */}
-            <div className="grid grid-cols-3 bg-[#152035] border-b border-[#1E3350]">
-              <div className="p-4" />
-              <div className="p-4 text-center border-l border-[#1E3350]">
-                <p className="font-heading font-black text-white text-sm">LIGHT</p>
-                <p className="text-[#94A3B8] text-xs">& Comfort</p>
-              </div>
-              <div className="p-4 text-center border-l border-[#1CA6DF]/40 bg-[#1CA6DF]/5">
-                <p className="font-heading font-black text-[#1CA6DF] text-sm">PRO</p>
-                <p className="text-[#94A3B8] text-xs">Guard & Protection</p>
-              </div>
-            </div>
-
-            {/* Rows */}
-            {COMPARISON_ROWS.map((row, i) => (
-              <div
-                key={row.label}
-                className={`grid grid-cols-3 border-b border-[#1E3350] last:border-0 ${
-                  i % 2 === 0 ? 'bg-[#0A1628]' : 'bg-[#0D1A2E]'
-                }`}
-              >
-                <div className="p-4 text-[#94A3B8] text-sm font-medium">{row.label}</div>
-                <div className={`p-4 text-center text-sm border-l border-[#1E3350] ${row.highlight ? 'font-bold text-white' : 'text-[#94A3B8]'}`}>
-                  {row.light}
-                </div>
-                <div className={`p-4 text-center text-sm border-l border-[#1CA6DF]/40 bg-[#1CA6DF]/5 ${row.highlight ? 'font-bold text-[#1CA6DF]' : 'text-[#94A3B8]'}`}>
-                  {row.pro}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto rounded-2xl border border-[#1E3350] bg-[#152035] p-10 md:p-12 grid md:grid-cols-[1.2fr_auto] gap-8 items-center">
+    <section
+      id={line.key}
+      aria-labelledby={`${line.key}-title`}
+      className={`relative scroll-mt-16 py-24 md:py-32 ${arena ? 'bg-arena' : 'on-canvas bg-canvas'} ${ink}`}
+    >
+      <span aria-hidden="true" className={`rope ${arena ? 'rope-red' : 'rope-blue'} absolute inset-x-0 top-0 rounded-none`} />
+      <div className="mx-auto max-w-[1400px] px-4 md:px-8">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
-            <h2 className="font-heading font-black text-2xl md:text-3xl text-white mb-2">
-              Chưa biết chọn gói nào?
-            </h2>
-            <p className="text-[#94A3B8] text-sm">
-              Nhắn Zalo — TGG tư vấn miễn phí và giúp bạn chọn đúng ngay từ đầu, dựa trên môn thể thao và nhu cầu cá nhân hóa của bạn.
-            </p>
+            <h2 id={`${line.key}-title`} className="apron text-[clamp(5rem,13vw,11rem)]">{line.name}</h2>
+            <p className={`placard text-2xl ${mute}`}>{line.tagline}</p>
+            <p className={`mt-6 max-w-[34rem] text-lg leading-relaxed ${mute}`}>{line.lede}</p>
+            <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-2" aria-label="Phù hợp cho">
+              {line.sports.map((s) => (
+                <li key={s} className="placard flex items-center gap-2 text-base">
+                  <span aria-hidden="true" className={`h-2 w-2 rounded-full ${arena ? 'bg-corner' : 'bg-canvas-ink'}`} />
+                  {s}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-10">
+              <CrossSection layers={line.layers} tone={arena ? 'arena' : 'canvas'} />
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 md:flex-col">
-            <a
-              href="https://zalo.me/0975580253"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold px-6 py-3 rounded-xl transition-all text-sm whitespace-nowrap"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.09-1.35A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.66 0-3.22-.46-4.54-1.26l-.32-.19-3.02.8.81-2.96-.21-.34A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z" />
-              </svg>
-              Tư vấn qua Zalo
-            </a>
-            <Link
-              href="/order"
-              className="inline-flex items-center justify-center gap-2 border border-[#1CA6DF] text-[#1CA6DF] hover:bg-[#1CA6DF] hover:text-white font-bold px-6 py-3 rounded-xl transition-all text-sm whitespace-nowrap"
-            >
-              Đặt hàng online
-            </Link>
+
+          <div className="grid gap-4">
+            {line.shots.slice(0, 1).map((p) => (
+              <figure key={p.id}>
+                <div className="relative aspect-[3/2] overflow-hidden rounded-[6px] bg-black">
+                  <Image src={p.src} alt={p.alt} fill placeholder="blur" blurDataURL={p.blurDataURL} sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
+                </div>
+                <Caption p={p} ink={ink} mute={mute} />
+              </figure>
+            ))}
+            <div className="grid grid-cols-2 gap-4">
+              {line.shots.slice(1).map((p) => (
+                <figure key={p.id}>
+                  <div className="relative aspect-[3/2] overflow-hidden rounded-[6px] bg-black">
+                    <Image src={p.src} alt={p.alt} fill placeholder="blur" blurDataURL={p.blurDataURL} sizes="(min-width: 1024px) 27vw, 50vw" className="object-cover" />
+                  </div>
+                  <Caption p={p} ink={ink} mute={mute} />
+                </figure>
+              ))}
+            </div>
           </div>
         </div>
-      </section>
 
+        {/* Điểm mạnh: danh sách chia bằng dây, không đóng hộp */}
+        <dl className={`mt-20 grid gap-x-12 border-t-[3px] sm:grid-cols-2 ${arena ? 'border-arena-ink' : 'border-canvas-ink'}`}>
+          {line.strengths.map((s) => (
+            <div key={s.title} className={`border-b-[3px] py-6 ${rule}`}>
+              <dt className="placard text-2xl">{s.title}</dt>
+              <dd className={`mt-2 text-lg leading-relaxed ${mute}`}>{s.desc}</dd>
+            </div>
+          ))}
+        </dl>
+
+        {/* Gói giá: ba cột chia bằng dây dọc */}
+        <h3 className="apron mt-24 text-[clamp(2.75rem,6vw,5rem)]">Chọn gói {line.name}.</h3>
+        <ol className="mt-10 grid gap-12 lg:grid-cols-3 lg:gap-0">
+          {line.packages.map((pkg, i) => (
+            <li key={pkg.id} className={`flex flex-col ${i > 0 ? `lg:border-l-[3px] lg:pl-10 ${rule}` : ''} ${i < 2 ? 'lg:pr-10' : ''}`}>
+              <div className="flex items-baseline justify-between gap-4">
+                <p className="placard text-2xl">{pkg.name}</p>
+                {pkg.recommended && (
+                  <span className={`placard shrink-0 text-sm ${arena ? 'text-corner' : 'text-canvas-ink underline decoration-[3px] underline-offset-4'}`}>
+                    Khuyên dùng
+                  </span>
+                )}
+              </div>
+              <p className="placard tabular mt-3 text-4xl normal-case">{pkg.price}</p>
+              <ul className="mt-6 flex-1 space-y-3 text-base leading-snug">
+                {pkg.includes.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span aria-hidden="true" className={`mt-[0.6em] h-[3px] w-4 shrink-0 rounded ${bar}`} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8">
+                {pkg.recommended ? (
+                  arena ? (
+                    <Link href={`/order?line=${line.key}&pkg=${pkg.id}#order-form`} className="corner-pad">
+                      Đặt gói này <ArrowIcon />
+                    </Link>
+                  ) : (
+                    <Link href={`/order?line=${line.key}&pkg=${pkg.id}#order-form`} className="ink-pad">
+                      Đặt gói này <ArrowIcon />
+                    </Link>
+                  )
+                ) : (
+                  <Link href={`/order?line=${line.key}&pkg=${pkg.id}#order-form`} className="rope-link placard inline-flex min-h-11 items-center gap-2 text-lg">
+                    Đặt gói này <ArrowIcon />
+                  </Link>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+// ── Trang ────────────────────────────────────────────────────────────────────
+
+export default function ProductsPage() {
+  return (
+    <>
+      <Navbar />
+      <main>
+        <PageHead
+          title="Hai dòng. Một tiêu chuẩn."
+          lede="Custom-fit hoàn toàn từ khuôn răng thực tế, không boil-and-bite, không size chung."
+          photo={photo('tiboom')}
+        >
+          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-1">
+            {[PROMISES[0], PROMISES[3], '2–3 ngày sản xuất'].map((p) => (
+              <li key={p} className="placard flex items-center gap-2 text-[0.95rem] text-arena-ink">
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-corner" />
+                {p}
+              </li>
+            ))}
+          </ul>
+          <nav aria-label="Đến dòng sản phẩm" className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+            <a href="#pro" className="rope-link placard inline-flex items-center gap-2 text-xl text-arena-ink">
+              PRO · cho đối kháng <ArrowIcon className="h-5 w-5 rotate-90" />
+            </a>
+            <a href="#light" className="rope-link placard inline-flex items-center gap-2 text-xl text-arena-ink">
+              LIGHT · cho vận động <ArrowIcon className="h-5 w-5 rotate-90" />
+            </a>
+          </nav>
+        </PageHead>
+
+        <LineSection line={PRO} />
+        <LineSection line={LIGHT} />
+
+        {/* So sánh */}
+        <section aria-labelledby="compare-title" className="on-canvas bg-canvas pb-24 text-canvas-ink md:pb-32">
+          <div className="mx-auto max-w-[1400px] px-4 md:px-8">
+            <div className="grid gap-10 border-t-[3px] border-canvas-ink pt-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+              <div>
+                <h2 id="compare-title" className="apron text-[clamp(2.75rem,6vw,5rem)]">LIGHT hay PRO?</h2>
+                <p className="mt-6 max-w-[28rem] text-lg leading-relaxed text-canvas-mute">
+                  Cùng quy trình, cùng lab. Khác nhau ở số lớp EVA, màu và môn bạn tập.
+                </p>
+              </div>
+              <div>
+                <div className="grid grid-cols-2 border-b-[3px] border-canvas-ink pb-3 sm:grid-cols-[1.1fr_1fr_1fr]">
+                  <span className="hidden sm:block" />
+                  <span className="placard text-xl">LIGHT</span>
+                  <span className="placard text-xl">PRO</span>
+                </div>
+                <dl>
+                  {COMPARISON.map((row) => (
+                    <div key={row.label} className="grid grid-cols-2 gap-x-4 border-b border-canvas-deep py-4 sm:grid-cols-[1.1fr_1fr_1fr]">
+                      <dt className="placard col-span-2 mb-1 text-sm text-canvas-mute sm:col-span-1 sm:mb-0 sm:text-base">{row.label}</dt>
+                      <dd className="text-base">{row.light}</dd>
+                      <dd className="text-base">{row.pro}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <ZaloClose
+          title="Chưa biết chọn gói nào?"
+          lede="Nhắn Zalo, TGG tư vấn miễn phí và giúp bạn chọn đúng ngay từ đầu, dựa trên môn thể thao và nhu cầu cá nhân hóa của bạn."
+          cta="Tư vấn qua Zalo"
+        >
+          <Link href="/order" className="rope-link placard inline-flex items-center gap-2 text-arena-ink">
+            Đặt hàng online <ArrowIcon />
+          </Link>
+          <Link href="/gallery" className="rope-link placard inline-flex items-center gap-2 text-arena-mute hover:text-arena-ink">
+            Xem gallery
+          </Link>
+        </ZaloClose>
+      </main>
       <Footer />
-    </div>
+      <MobileCornerBar />
+    </>
   )
 }

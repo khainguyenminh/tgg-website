@@ -1,17 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-  /* Màu TGG */
-  --color-tgg-blue:       #1CA6DF;
-  --color-tgg-blue-dark:  #1590C2;
-  --color-tgg-blue-light: #60C8F3;
-  --color-bg-primary:     #0A1628;
-  --color-bg-secondary:   #0F1F38;
-  --color-bg-card:        #152035;
-  --color-border-tgg:     #1E3350;
-  --color-text-primary:   #F1F5F9;
-  --color-text-secondary: #94A3B8;
-
   /* Góc Xanh — sàn đài */
   --color-arena:        #0A0C0F;  /* nền đen sân đấu, nơi ảnh studio đứng dưới đèn */
   --color-arena-lift:   #14181D;  /* mặt tối nâng nhẹ: menu mở, ô ảnh chờ */
@@ -22,9 +11,11 @@
   --color-canvas-ink:   #0D0D0D;
   --color-canvas-mute:  #3E4852;  /* chữ phụ trên canvas (≈8:1) */
   --color-corner:       #1CA6DF;  /* đệm góc xanh TGG: hành động chính, chữ đen */
-  --color-corner-deep:  #1590C2;
   --color-rope-red:     #D7263D;
   --color-rope-white:   #F2F4F5;
+  --color-ink-lift:     #2A3138;  /* hover của nút mực */
+  --color-alert:        #9E1B2F;  /* chữ báo lỗi trên canvas (≈6.6:1) */
+  --color-alert-dark:   #FF7085;  /* chữ báo lỗi trên nền đen (≈7:1) */
 
   /* Font — Archivo một họ, hai độ rộng: apron siêu hẹp và chữ đọc */
   --font-heading: var(--font-archivo), sans-serif;
@@ -227,6 +218,107 @@ a { text-underline-offset: 0.22em; }
 .corner-pad-sm::before { top: 5px; }
 .corner-pad-sm::after { bottom: 6px; }
 .corner-pad-lg { min-height: 4.5rem; padding: 1.2rem 2.4rem; font-size: 1.5rem; border-radius: 18px; }
+
+/* ─── Nút phụ và nút chọn (bộ lọc, chọn dòng/gói, công cụ) ───────── */
+.ink-pad,
+.arena-pad {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3.5rem;
+  padding: 0 1.75rem;
+  border-radius: 14px;
+  font-family: var(--font-heading);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transition: background-color 200ms;
+}
+.ink-pad { background: var(--color-canvas-ink); color: var(--color-canvas); }
+.ink-pad:hover { background: var(--color-ink-lift); }
+.arena-pad { background: var(--color-arena-lift); color: var(--color-arena-ink); }
+.arena-pad:hover { background: #1F252C; }
+.ink-pad:disabled, .arena-pad:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Nút chọn: viền dây 3px, khi chọn thì đổ đặc. Mặc định cho nền đen, .on-canvas đổi sang mực */
+.seg {
+  --seg-line: rgb(242 244 245 / 0.16);
+  --seg-ink: var(--color-arena-ink);
+  --seg-on-bg: var(--color-arena-ink);
+  --seg-on-ink: var(--color-arena);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.35rem 1rem;
+  border: 3px solid var(--seg-line);
+  border-radius: 11px;
+  color: var(--seg-ink);
+  font-family: var(--font-heading);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  transition: background-color 200ms, color 200ms, border-color 200ms;
+}
+.seg:hover { border-color: var(--seg-ink); }
+.seg[aria-pressed='true'],
+.seg[aria-checked='true'] {
+  background: var(--seg-on-bg);
+  border-color: var(--seg-on-bg);
+  color: var(--seg-on-ink);
+}
+.seg:disabled { opacity: 0.4; cursor: not-allowed; }
+.on-canvas .seg {
+  --seg-line: var(--color-canvas-deep);
+  --seg-ink: var(--color-canvas-ink);
+  --seg-on-bg: var(--color-canvas-ink);
+  --seg-on-ink: var(--color-canvas);
+}
+
+/* Ô nhập liệu: nền sáng hơn canvas, viền dây 3px, focus đổi viền mực */
+.field {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.9rem;
+  border: 3px solid var(--color-canvas-deep);
+  border-radius: 11px;
+  background: #F4F6F7;
+  color: var(--color-canvas-ink);
+  font-size: 1rem;
+  transition: border-color 200ms;
+}
+.field::placeholder { color: #66717B; }
+.field:focus { outline: none; border-color: var(--color-canvas-ink); }
+.field[aria-invalid='true'] { border-color: var(--color-alert); }
+.field-dark {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.8rem;
+  border: 3px solid rgb(242 244 245 / 0.16);
+  border-radius: 11px;
+  background: var(--color-arena);
+  color: var(--color-arena-ink);
+  font-size: 1rem;
+}
+.field-dark::placeholder { color: #7D8892; }
+.field-dark:focus { outline: none; border-color: var(--color-corner); }
+.field-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-heading);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
 }
 
 /* ─── Chuyển động: mọi thứ đứng yên nếu người dùng xin giảm ─────── */

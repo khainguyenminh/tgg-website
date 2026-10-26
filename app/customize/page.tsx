@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import DesignerLoader from '@/components/MouthguardDesigner/DesignerLoader'
+import MobileCornerBar from '@/components/ring/MobileCornerBar'
 
 export const metadata: Metadata = {
   title: 'Tự thiết kế mouthguard — The Guard Guy',
@@ -10,10 +11,13 @@ export const metadata: Metadata = {
 
 export default function CustomizePage() {
   return (
-    <main className="pt-16">
+    <>
       <Navbar />
-      <DesignerLoader />
+      <main className="bg-arena pt-16 md:pt-[72px]">
+        <DesignerLoader />
+      </main>
       <Footer />
-    </main>
+      <MobileCornerBar />
+    </>
   )
 }

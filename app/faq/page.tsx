@@ -1,25 +1,32 @@
-'use client'
-
-import { useState } from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import PageHead from '@/components/ring/PageHead'
+import ZaloClose from '@/components/ring/ZaloClose'
+import Accordion from '@/components/ring/Accordion'
+import MobileCornerBar from '@/components/ring/MobileCornerBar'
+import { ArrowIcon } from '@/components/ring/icons'
 
-// ── FAQ data ─────────────────────────────────────────────────────────────────
+export const metadata: Metadata = {
+  title: 'Câu hỏi thường gặp — The Guard Guy',
+  description: 'Sản phẩm và độ fit, quy trình scan 3D, đối tượng sử dụng, cá nhân hóa, bảo quản và chính sách của mouthguard The Guard Guy.',
+}
+
+// ── Dữ liệu FAQ ──────────────────────────────────────────────────────────────
 
 const categories = [
   {
     id: 'product',
     label: 'Sản phẩm & Fit',
-    icon: '🛡️',
     faqs: [
       {
         q: 'LIGHT và PRO khác nhau thế nào?',
-        a: 'LIGHT cấu tạo 2 lớp EVA mỏng, nhẹ, chỉ có màu trong suốt — phù hợp cho các môn thể thao không đối kháng như bóng rổ, bóng đá, gym. PRO cấu tạo 3 lớp EVA dày hơn, bảo vệ tối đa, có 16 màu — phù hợp cho combat sports như boxing, Muay Thái, MMA. Cả hai đều custom-fit hoàn toàn theo răng của bạn.',
+        a: 'LIGHT cấu tạo 2 lớp EVA mỏng, nhẹ, chỉ có màu trong suốt, phù hợp cho các môn thể thao không đối kháng như bóng rổ, bóng đá, gym. PRO cấu tạo 3 lớp EVA dày hơn, bảo vệ tốt hơn khi chịu va chạm mạnh, có 16 màu, phù hợp cho combat sports như boxing, Muay Thái, MMA. Cả hai đều custom-fit hoàn toàn theo răng của bạn.',
       },
       {
         q: 'Tại sao nên dùng custom-fit thay vì mua máng đại trà ở tiệm thể thao?',
-        a: 'Máng đại trà được làm theo kích cỡ trung bình — không vừa khít răng của bạn, dễ bị tuột, cần cắn giữ liên tục, và thường gây khó thở, khó giao tiếp. Máng custom-fit của TGG được sản xuất trực tiếp từ khuôn răng của bạn bằng quy trình dental lab — vừa khít, không tuột, không cần cắn giữ, thoải mái khi đeo dài.',
+        a: 'Máng đại trà được làm theo kích cỡ trung bình, không vừa khít răng của bạn, dễ bị tuột, cần cắn giữ liên tục, và thường gây khó thở, khó giao tiếp. Máng custom-fit của TGG được sản xuất trực tiếp từ khuôn răng của bạn bằng quy trình dental lab, vừa khít, không tuột, không cần cắn giữ, thoải mái khi đeo dài.',
       },
       {
         q: 'Máng có bị tuột khi đang thi đấu không?',
@@ -27,41 +34,39 @@ const categories = [
       },
       {
         q: 'Đeo lần đầu có bị cộm, cấn không?',
-        a: 'Hầu hết khách hàng cảm thấy thoải mái ngay từ buổi đầu tiên. Có thể có cảm giác lạ trong vài buổi tập đầu vì đây là vật thể mới trong miệng — đây là phản ứng bình thường và sẽ qua nhanh. Nếu có điểm cấn mạnh hoặc khó chịu kéo dài, liên hệ TGG để được hỗ trợ điều chỉnh.',
+        a: 'Hầu hết khách hàng cảm thấy thoải mái ngay từ buổi đầu tiên. Có thể có cảm giác lạ trong vài buổi tập đầu vì đây là vật thể mới trong miệng, đây là phản ứng bình thường và sẽ qua nhanh. Nếu có điểm cấn mạnh hoặc khó chịu kéo dài, liên hệ TGG để được hỗ trợ điều chỉnh.',
       },
       {
         q: 'Có làm hàm dưới không?',
-        a: 'TGG chủ yếu sản xuất máng hàm trên (upper guard) — đây là tiêu chuẩn cho hầu hết các môn thể thao. Nếu bạn có nhu cầu đặc biệt cần máng hàm dưới, liên hệ TGG trực tiếp để được tư vấn.',
+        a: 'TGG chủ yếu sản xuất máng hàm trên (upper guard), đây là tiêu chuẩn cho hầu hết các môn thể thao. Nếu bạn có nhu cầu đặc biệt cần máng hàm dưới, liên hệ TGG trực tiếp để được tư vấn.',
       },
     ],
   },
   {
     id: 'process',
     label: 'Quy trình & Thời gian',
-    icon: '📦',
     faqs: [
       {
         q: 'Mất bao lâu từ lúc đặt đến khi nhận hàng?',
-        a: 'Tổng thời gian gồm 3 phần: (1) Scan 3D — 10–15 phút; (2) Duyệt thiết kế 2D — tối đa 24 giờ (chỉ gói Custom); (3) Sản xuất — 2–3 ngày làm việc sau khi chốt thiết kế. Cộng thêm thời gian vận chuyển tùy địa chỉ.',
+        a: 'Tổng thời gian gồm 3 phần: (1) Scan 3D, 10–15 phút; (2) Duyệt thiết kế 2D, tối đa 24 giờ (chỉ gói Custom); (3) Sản xuất, 2–3 ngày làm việc sau khi chốt thiết kế. Cộng thêm thời gian vận chuyển tùy địa chỉ.',
       },
       {
         q: 'Scan 3D có đau hoặc khó chịu không?',
-        a: 'Hoàn toàn không. Scan 3D intraoral là quy trình không xâm lấn — kỹ thuật viên chỉ đưa một đầu dò nhỏ vào miệng và quét quanh răng. Không cần chích thuốc, không cần mở miệng to, không đau. Toàn bộ quá trình mất khoảng 10–15 phút.',
+        a: 'Hoàn toàn không. Scan 3D intraoral là quy trình không xâm lấn, kỹ thuật viên chỉ đưa một đầu dò nhỏ vào miệng và quét quanh răng. Không cần chích thuốc, không cần mở miệng to, không đau. Toàn bộ quá trình mất khoảng 10–15 phút.',
       },
       {
         q: 'Tôi không ở TP.HCM thì làm sao scan?',
-        a: 'Bạn có thể đến bất kỳ nha khoa nào có dịch vụ scan 3D intraoral ở địa phương, sau đó gửi file scan về cho TGG. Nếu chưa biết nha khoa nào gần bạn có dịch vụ này, nhắn TGG — chúng tôi sẽ tư vấn địa chỉ phù hợp.',
+        a: 'Bạn có thể đến bất kỳ nha khoa nào có dịch vụ scan 3D intraoral ở địa phương, sau đó gửi file scan về cho TGG. Nếu chưa biết nha khoa nào gần bạn có dịch vụ này, nhắn TGG, chúng tôi sẽ tư vấn địa chỉ phù hợp.',
       },
       {
         q: 'Có thể xem trước thiết kế trước khi sản xuất không?',
-        a: 'Có — với các gói Custom Text và Fully Design, TGG sẽ gửi bản thiết kế 2D để bạn xem và góp ý trước khi sản xuất. Sản xuất chỉ bắt đầu sau khi bạn xác nhận thiết kế.',
+        a: 'Có, với các gói Custom Text và Fully Design, TGG sẽ gửi bản thiết kế 2D để bạn xem và góp ý trước khi sản xuất. Sản xuất chỉ bắt đầu sau khi bạn xác nhận thiết kế.',
       },
     ],
   },
   {
     id: 'who',
     label: 'Đối tượng sử dụng',
-    icon: '👤',
     faqs: [
       {
         q: 'Người đang niềng răng có dùng được không?',
@@ -69,7 +74,7 @@ const categories = [
       },
       {
         q: 'Trẻ em có dùng được không?',
-        a: 'Trẻ có thể sử dụng máng khi đã mọc đủ răng vĩnh viễn — đây là thời điểm hàm đã ổn định đủ để custom-fit chính xác. Nếu bạn chưa chắc con đã mọc đủ răng vĩnh viễn chưa, liên hệ TGG để được tư vấn trực tiếp.',
+        a: 'Trẻ có thể sử dụng máng khi đã mọc đủ răng vĩnh viễn, đây là thời điểm hàm đã ổn định đủ để custom-fit chính xác. Nếu bạn chưa chắc con đã mọc đủ răng vĩnh viễn chưa, liên hệ TGG để được tư vấn trực tiếp.',
       },
       {
         q: 'Người vừa nhổ răng hoặc mới làm implant có đặt được không?',
@@ -80,11 +85,10 @@ const categories = [
   {
     id: 'design',
     label: 'Cá nhân hóa',
-    icon: '🎨',
     faqs: [
       {
         q: 'Có in tên, logo không?',
-        a: 'Có — với gói Custom Text trở lên, bạn có thể thêm tên, số áo, logo, hoặc bất kỳ chữ nào theo yêu cầu. Với gói Fully Design, bạn có thể cá nhân hóa hoàn toàn kể cả hình ảnh và các hiệu ứng đặc biệt như tráng gương, đính đá.',
+        a: 'Có, với gói Custom Text trở lên, bạn có thể thêm tên, số áo, logo, hoặc bất kỳ chữ nào theo yêu cầu. Với gói Fully Design, bạn có thể cá nhân hóa hoàn toàn kể cả hình ảnh và các hiệu ứng đặc biệt như tráng gương, đính đá.',
       },
       {
         q: 'Có bao nhiêu màu để chọn?',
@@ -99,7 +103,6 @@ const categories = [
   {
     id: 'care',
     label: 'Bảo quản & Độ bền',
-    icon: '🧼',
     faqs: [
       {
         q: 'Máng dùng được bao lâu?',
@@ -107,22 +110,21 @@ const categories = [
       },
       {
         q: 'Vệ sinh thế nào?',
-        a: 'Sau mỗi lần dùng: rửa bằng nước lạnh, dùng bàn chải mềm và xà phòng nhẹ (hoặc nước súc miệng không cồn). Để khô tự nhiên trước khi cất vào hộp — không để trong hộp kín khi còn ướt. Không ngâm trong nước nóng hoặc để gần nguồn nhiệt. Bảo quản trong hộp đựng chuyên dụng, tránh ánh nắng trực tiếp.',
+        a: 'Sau mỗi lần dùng: rửa bằng nước lạnh, dùng bàn chải mềm và xà phòng nhẹ (hoặc nước súc miệng không cồn). Để khô tự nhiên trước khi cất vào hộp, không để trong hộp kín khi còn ướt. Không ngâm trong nước nóng hoặc để gần nguồn nhiệt. Bảo quản trong hộp đựng chuyên dụng, tránh ánh nắng trực tiếp.',
       },
       {
-        q: 'Máng bị mất hoặc hư — có đặt lại được không? TGG có lưu dữ liệu scan không?',
-        a: 'Có — TGG lưu dữ liệu scan của bạn. Nếu máng đang đeo ổn và bạn muốn đặt thêm một cái với thiết kế khác, chỉ cần nhắn order, không cần đến scan lại. Ngoài ra, khách hàng cũ quay lại đặt thêm còn được hưởng chương trình giảm giá đặc biệt — liên hệ TGG để biết ưu đãi hiện hành.',
+        q: 'Máng bị mất hoặc hư, có đặt lại được không? TGG có lưu dữ liệu scan không?',
+        a: 'Có, TGG lưu dữ liệu scan của bạn. Nếu máng đang đeo ổn và bạn muốn đặt thêm một cái với thiết kế khác, chỉ cần nhắn order, không cần đến scan lại. Ngoài ra, khách hàng cũ quay lại đặt thêm còn được hưởng chương trình giảm giá đặc biệt, liên hệ TGG để biết ưu đãi hiện hành.',
       },
       {
         q: 'Để máng nơi nóng (xe, túi gym) có bị biến dạng không?',
-        a: 'Có. EVA là vật liệu nhạy cảm với nhiệt — để máng trong xe dưới trời nắng hoặc gần các vật phát nhiệt có thể làm máng biến dạng và mất fit. Luôn bảo quản máng trong hộp đựng ở nơi thoáng mát, tránh nhiệt độ cao.',
+        a: 'Có. EVA là vật liệu nhạy cảm với nhiệt, để máng trong xe dưới trời nắng hoặc gần các vật phát nhiệt có thể làm máng biến dạng và mất fit. Luôn bảo quản máng trong hộp đựng ở nơi thoáng mát, tránh nhiệt độ cao.',
       },
     ],
   },
   {
     id: 'pricing',
     label: 'Giá & Chính sách',
-    icon: '💳',
     faqs: [
       {
         q: 'Giá đã bao gồm scan chưa?',
@@ -130,158 +132,76 @@ const categories = [
       },
       {
         q: 'Nếu nhận hàng không vừa thì xử lý thế nào?',
-        a: 'TGG đảm bảo về độ khít sát — nếu máng có vấn đề về fit sau khi nhận hàng, TGG bảo hành 1 đổi 1. Liên hệ trực tiếp qua Zalo để được hỗ trợ nhanh nhất.',
+        a: 'TGG đảm bảo về độ khít sát, nếu máng có vấn đề về fit sau khi nhận hàng, TGG bảo hành 1 đổi 1. Liên hệ trực tiếp qua Zalo để được hỗ trợ nhanh nhất.',
       },
       {
         q: 'Có ship toàn quốc không? Phí ship bao nhiêu?',
-        a: 'Có — TGG nhận đơn và ship toàn quốc. Miễn phí vận chuyển cho tất cả đơn hàng.',
+        a: 'Có, TGG nhận đơn và ship toàn quốc. Miễn phí vận chuyển cho tất cả đơn hàng.',
       },
     ],
   },
 ]
 
-// ── Accordion item ────────────────────────────────────────────────────────────
-
-function AccordionItem({
-  q,
-  a,
-  isOpen,
-  onToggle,
-}: {
-  q: string
-  a: string
-  isOpen: boolean
-  onToggle: () => void
-}) {
-  return (
-    <div className="border border-[#1E3350] rounded-xl overflow-hidden bg-[#152035] transition-all">
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
-      >
-        <span className="font-semibold text-white text-sm md:text-base leading-snug">
-          {q}
-        </span>
-        <span
-          className={`text-[#1CA6DF] text-xl flex-shrink-0 transition-transform duration-200 ${
-            isOpen ? 'rotate-45' : ''
-          }`}
-        >
-          +
-        </span>
-      </button>
-
-      {isOpen && (
-        <div className="px-6 pb-5">
-          <p className="text-[#94A3B8] text-sm leading-relaxed">{a}</p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Trang ────────────────────────────────────────────────────────────────────
 
 export default function FAQPage() {
-  const [activeCategory, setActiveCategory] = useState<string>('product')
-  const [openItem, setOpenItem] = useState<string | null>(null)
-
-  const currentCategory = categories.find((c) => c.id === activeCategory)!
-
-  const toggle = (key: string) => setOpenItem(openItem === key ? null : key)
-
   return (
-    <div style={{ backgroundColor: '#0A1628', minHeight: '100vh' }}>
+    <>
       <Navbar />
+      <main>
+        <PageHead
+          title="Câu hỏi thường gặp."
+          lede="Mọi thứ bạn cần biết về mouthguard TGG: sản phẩm, quy trình, cách bảo quản và chính sách."
+        />
 
-      {/* ── Hero ── */}
-      <section className="pt-32 pb-16 px-6 text-center">
-        <span className="text-xs font-bold text-[#1CA6DF] uppercase tracking-widest">FAQ</span>
-        <h1 className="font-heading font-black text-4xl md:text-6xl text-white mt-3 mb-4 leading-tight">
-          Câu hỏi thường gặp
-        </h1>
-        <p className="text-[#94A3B8] text-lg max-w-xl mx-auto">
-          Mọi thứ bạn cần biết về TGG mouthguard — sản phẩm, quy trình, và cách bảo quản.
-        </p>
-      </section>
+        <section aria-label="Danh sách câu hỏi" className="on-canvas bg-canvas pb-24 text-canvas-ink md:pb-32">
+          {/* Mục lục cuộn ngang, ghim dưới menu trên điện thoại */}
+          <nav aria-label="Nhóm câu hỏi" className="sticky top-16 z-20 border-b-[3px] border-canvas-deep bg-canvas/95 backdrop-blur-sm lg:hidden">
+            <ul className="flex gap-2 overflow-x-auto px-4 py-3">
+              {categories.map((c) => (
+                <li key={c.id} className="shrink-0">
+                  <a href={`#${c.id}`} className="seg whitespace-nowrap">{c.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-      {/* ── Category tabs ── */}
-      <section className="px-6 pb-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => {
-                  setActiveCategory(cat.id)
-                  setOpenItem(null)
-                }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all border ${
-                  activeCategory === cat.id
-                    ? 'bg-[#1CA6DF] text-white border-[#1CA6DF]'
-                    : 'bg-[#152035] text-[#94A3B8] border-[#1E3350] hover:border-[#1CA6DF]/50 hover:text-white'
-                }`}
-              >
-                <span>{cat.icon}</span>
-                <span>{cat.label}</span>
-              </button>
-            ))}
+          <div className="mx-auto grid max-w-[1400px] gap-12 px-4 pt-12 md:px-8 md:pt-16 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+            {/* Mục lục ghim trên desktop */}
+            <nav aria-label="Nhóm câu hỏi" className="hidden lg:block">
+              <ol className="sticky top-28 border-t-[3px] border-canvas-ink">
+                {categories.map((c) => (
+                  <li key={c.id} className="border-b-[3px] border-canvas-deep">
+                    <a href={`#${c.id}`} className="group flex min-h-14 items-center gap-4 py-3">
+                      <span className="placard text-xl group-hover:underline group-hover:decoration-[3px] group-hover:underline-offset-4">{c.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+
+            <div className="flex flex-col gap-20">
+              {categories.map((c) => (
+                <section key={c.id} id={c.id} aria-labelledby={`${c.id}-title`} className="scroll-mt-36 lg:scroll-mt-28">
+                  <h2 id={`${c.id}-title`} className="apron mb-8 text-[clamp(2.5rem,5vw,4.25rem)]">{c.label}</h2>
+                  <Accordion items={c.faqs} />
+                </section>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── FAQ list ── */}
-      <section className="px-6 pb-20">
-        <div className="max-w-3xl mx-auto">
-          <div className="space-y-3">
-            {currentCategory.faqs.map((faq, i) => {
-              const key = `${activeCategory}-${i}`
-              return (
-                <AccordionItem
-                  key={key}
-                  q={faq.q}
-                  a={faq.a}
-                  isOpen={openItem === key}
-                  onToggle={() => toggle(key)}
-                />
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Still have questions ── */}
-      <section className="py-16 px-6">
-        <div className="max-w-2xl mx-auto rounded-2xl border border-[#1E3350] bg-[#152035] p-8 sm:p-10 text-center">
-          <h2 className="font-heading font-black text-2xl sm:text-3xl text-white mb-3">
-            Chưa tìm được câu trả lời?
-          </h2>
-          <p className="text-[#94A3B8] mb-8">
-            Nhắn trực tiếp — TGG phản hồi trong vòng vài phút qua Zalo.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://zalo.me/0975580253"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold px-8 py-4 rounded-xl transition-all"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l5.09-1.35A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.66 0-3.22-.46-4.54-1.26l-.32-.19-3.02.8.81-2.96-.21-.34A7.96 7.96 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z" />
-              </svg>
-              Nhắn Zalo
-            </a>
-            <Link
-              href="/order"
-              className="inline-flex items-center justify-center gap-2 border-2 border-[#1CA6DF] text-[#1CA6DF] hover:bg-[#1CA6DF] hover:text-white font-bold px-8 py-4 rounded-xl transition-all"
-            >
-              Xem quy trình đặt hàng
-            </Link>
-          </div>
-        </div>
-      </section>
-
+        <ZaloClose
+          title="Chưa tìm được câu trả lời?"
+          lede="Nhắn trực tiếp, TGG phản hồi trong vòng vài phút qua Zalo."
+        >
+          <Link href="/order" className="rope-link placard inline-flex items-center gap-2 text-arena-ink">
+            Xem quy trình đặt hàng <ArrowIcon />
+          </Link>
+        </ZaloClose>
+      </main>
       <Footer />
-    </div>
+      <MobileCornerBar />
+    </>
   )
 }

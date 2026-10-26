@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { CheckIcon, ZaloIcon } from './ring/icons'
+import { EMAIL, ZALO_URL } from '@/lib/site'
 
 const LINES = [
   { key: 'light', label: 'LIGHT & Comfort' },
@@ -91,55 +93,42 @@ export default function OrderForm() {
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 
-  const copyAndOpenZalo = () => copyThenOpen('https://zalo.me/0975580253')
+  const copyAndOpenZalo = () => copyThenOpen(ZALO_URL)
   const copyAndOpenMessenger = () => copyThenOpen(`https://m.me/theguardguy?text=${encodeURIComponent(summary)}`)
 
-  const mailtoHref = `mailto:theguardguy.official@gmail.com?subject=${encodeURIComponent('Đặt hàng The Guard Guy')}&body=${encodeURIComponent(summary)}`
+  const mailtoHref = `mailto:${EMAIL}?subject=${encodeURIComponent('Đặt hàng The Guard Guy')}&body=${encodeURIComponent(summary)}`
 
   if (submitted) {
     return (
-      <div className="bg-[#152035] border border-[#1CA6DF]/40 rounded-2xl p-8 text-center">
-        <div className="text-3xl mb-3">✅</div>
-        <h3 className="font-heading font-black text-white text-xl mb-2">Đã ghi nhận yêu cầu của bạn</h3>
-        <p className="text-[#94A3B8] text-sm mb-6 max-w-md mx-auto">
-          Gửi nội dung này cho TGG để được xác nhận và đặt hẹn scan — chọn 1 trong 3 cách dưới đây:
+      <div className="border-t-[3px] border-canvas-ink pt-8">
+        <h3 className="placard flex items-center gap-3 text-3xl">
+          <CheckIcon className="h-8 w-8" />
+          Đã ghi nhận yêu cầu
+        </h3>
+        <p className="mt-4 max-w-[34rem] text-lg leading-relaxed text-canvas-mute">
+          Gửi nội dung này cho TGG để được xác nhận và đặt hẹn scan, chọn một trong ba cách dưới đây.
         </p>
 
-        <div className="bg-[#0A1628] border border-[#1E3350] rounded-xl p-4 text-left text-sm text-[#94A3B8] whitespace-pre-line mb-6 max-w-md mx-auto">
-          {summary}
-        </div>
+        <pre className="mt-6 whitespace-pre-line rounded-[6px] bg-canvas-deep p-5 font-body text-base leading-relaxed text-canvas-ink">{summary}</pre>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-3">
-          <button
-            onClick={copyAndOpenZalo}
-            className="inline-flex items-center justify-center gap-2 bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold px-6 py-3 rounded-xl transition-all"
-          >
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <button type="button" onClick={copyAndOpenZalo} className="corner-pad">
+            <ZaloIcon />
             Mở Zalo
           </button>
-          <button
-            onClick={copyAndOpenMessenger}
-            className="inline-flex items-center justify-center gap-2 border border-[#1CA6DF] text-[#1CA6DF] hover:bg-[#1CA6DF] hover:text-white font-bold px-6 py-3 rounded-xl transition-all"
-          >
+          <button type="button" onClick={copyAndOpenMessenger} className="seg !min-h-14 !px-5">
             Mở Messenger
           </button>
-          <a
-            href={mailtoHref}
-            className="inline-flex items-center justify-center gap-2 border border-[#1E3350] text-[#94A3B8] hover:border-[#1CA6DF]/50 hover:text-white font-bold px-6 py-3 rounded-xl transition-all"
-          >
+          <a href={mailtoHref} className="seg !min-h-14 !px-5">
             Gửi qua email
           </a>
         </div>
-        {copied && <p className="text-[#1CA6DF] text-xs">Đã sao chép nội dung — dán nếu Messenger/Zalo không tự điền sẵn.</p>}
-        {copyFailed && (
-          <p className="text-amber-400 text-xs">
-            Không tự sao chép được nội dung — vui lòng đọc và gõ lại nội dung phía trên khi nhắn Zalo.
-          </p>
-        )}
+        <div aria-live="polite" className="mt-4 text-base">
+          {copied && <p>Đã sao chép nội dung. Dán vào ô chat nếu Zalo hoặc Messenger không tự điền sẵn.</p>}
+          {copyFailed && <p className="text-alert">Không tự sao chép được. Vui lòng đọc và gõ lại nội dung phía trên khi nhắn Zalo.</p>}
+        </div>
 
-        <button
-          onClick={() => setSubmitted(false)}
-          className="text-[#94A3B8] hover:text-white text-xs mt-5 underline underline-offset-2"
-        >
+        <button type="button" onClick={() => setSubmitted(false)} className="rope-link placard mt-8 inline-flex min-h-11 items-center text-base">
           Sửa lại thông tin
         </button>
       </div>
@@ -147,90 +136,82 @@ export default function OrderForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#152035] border border-[#1E3350] rounded-2xl p-6 sm:p-8 space-y-6">
-      <div>
-        <p className="text-[#94A3B8] text-xs uppercase tracking-widest mb-3">Dòng sản phẩm</p>
-        <div className="flex gap-3 flex-wrap">
+    <form onSubmit={handleSubmit} noValidate className="space-y-8 border-t-[3px] border-canvas-ink pt-8">
+      <fieldset>
+        <legend className="field-label">Dòng sản phẩm</legend>
+        <div className="flex flex-wrap gap-2">
           {LINES.map((l) => (
-            <button
-              key={l.key}
-              type="button"
-              onClick={() => switchLine(l.key)}
-              className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-                line === l.key
-                  ? 'bg-[#1CA6DF] text-white border-[#1CA6DF]'
-                  : 'bg-[#0A1628] text-[#94A3B8] border-[#1E3350] hover:border-[#1CA6DF]/50 hover:text-white'
-              }`}
-            >
+            <button key={l.key} type="button" onClick={() => switchLine(l.key)} aria-pressed={line === l.key} className="seg !min-h-12">
               {l.label}
             </button>
           ))}
         </div>
-      </div>
+      </fieldset>
 
-      <div>
-        <p className="text-[#94A3B8] text-xs uppercase tracking-widest mb-3">Gói</p>
-        <div className="grid grid-cols-3 gap-2">
+      <fieldset>
+        <legend className="field-label">Gói</legend>
+        <div className="grid gap-2 sm:grid-cols-3">
           {PACKAGES_BY_LINE[line].map((p) => (
             <button
               key={p.key}
               type="button"
               onClick={() => setPkg(p.key)}
-              className={`px-2 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border transition-all whitespace-nowrap overflow-hidden text-ellipsis ${
-                pkg === p.key
-                  ? 'bg-[#1CA6DF]/10 text-[#1CA6DF] border-[#1CA6DF]'
-                  : 'bg-[#0A1628] text-[#94A3B8] border-[#1E3350] hover:border-[#1CA6DF]/50 hover:text-white'
-              }`}
+              aria-pressed={pkg === p.key}
+              className="seg !min-h-16 flex-col !items-start !gap-1 !py-2 text-left"
             >
-              {p.label}
+              <span>{p.label}</span>
+              <span className="tabular text-sm normal-case opacity-80">{p.price}</span>
             </button>
           ))}
         </div>
-      </div>
+      </fieldset>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="order-name" className="block text-[#94A3B8] text-xs uppercase tracking-widest mb-2">Tên của bạn</label>
+          <label htmlFor="order-name" className="field-label">Tên của bạn</label>
           <input
             id="order-name"
             value={name}
             onChange={(e) => { setName(e.target.value); setNameError('') }}
-            required
+            autoComplete="name"
             placeholder="Nguyễn Văn A"
-            className="w-full bg-[#0A1628] border border-[#1E3350] rounded-xl px-4 py-3 text-white text-sm placeholder:text-[#94A3B8]/50 focus:outline-none focus:border-[#1CA6DF] transition-colors"
+            aria-invalid={nameError ? true : undefined}
+            aria-describedby={nameError ? 'order-name-error' : undefined}
+            className="field"
           />
-          {nameError && <p className="text-red-400 text-xs mt-1.5">{nameError}</p>}
+          {nameError && <p id="order-name-error" className="mt-2 text-base text-alert">{nameError}</p>}
         </div>
         <div>
-          <label htmlFor="order-phone" className="block text-[#94A3B8] text-xs uppercase tracking-widest mb-2">Số điện thoại</label>
+          <label htmlFor="order-phone" className="field-label">Số điện thoại</label>
           <input
             id="order-phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
             value={phone}
             onChange={(e) => { setPhone(e.target.value); setPhoneError('') }}
-            required
             placeholder="0975580253"
-            className="w-full bg-[#0A1628] border border-[#1E3350] rounded-xl px-4 py-3 text-white text-sm placeholder:text-[#94A3B8]/50 focus:outline-none focus:border-[#1CA6DF] transition-colors"
+            aria-invalid={phoneError ? true : undefined}
+            aria-describedby={phoneError ? 'order-phone-error' : undefined}
+            className="field"
           />
-          {phoneError && <p className="text-red-400 text-xs mt-1.5">{phoneError}</p>}
+          {phoneError && <p id="order-phone-error" className="mt-2 text-base text-alert">{phoneError}</p>}
         </div>
       </div>
 
       <div>
-        <label htmlFor="order-note" className="block text-[#94A3B8] text-xs uppercase tracking-widest mb-2">Ghi chú (tùy chọn)</label>
+        <label htmlFor="order-note" className="field-label">Ghi chú (tùy chọn)</label>
         <textarea
           id="order-note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={3}
           placeholder="VD: muốn đặt lịch scan cuối tuần, cần in tên trên guard…"
-          className="w-full bg-[#0A1628] border border-[#1E3350] rounded-xl px-4 py-3 text-white text-sm placeholder:text-[#94A3B8]/50 focus:outline-none focus:border-[#1CA6DF] transition-colors resize-none"
+          className="field resize-none"
         />
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-[#1CA6DF] hover:bg-[#1590C2] text-white font-bold py-3.5 rounded-xl transition-all"
-      >
+      <button type="submit" className="corner-pad w-full">
         Xác nhận thông tin đặt hàng
       </button>
     </form>

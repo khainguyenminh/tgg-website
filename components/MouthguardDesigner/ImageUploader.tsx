@@ -53,16 +53,16 @@ export default function ImageUploader({ count, onUpload }: ImageUploaderProps) {
         type="button"
         disabled={limitReached}
         onClick={() => inputRef.current?.click()}
-        className="w-full bg-white/5 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed border border-white/10 text-white text-sm font-semibold rounded-lg px-4 py-2.5 transition-all"
+        className="arena-pad w-full !min-h-12 !text-base"
       >
-        Tải ảnh lên <span className="text-[#94A3B8] font-normal">/ Upload Image</span>
+        Tải ảnh lên <span className="normal-case opacity-70">/ Upload</span>
       </button>
 
-      <p className="text-[10px] text-[#94A3B8] mt-1.5">
-        {count}/{MAX_IMAGES} ảnh <span className="opacity-70">— Tối đa {MAX_IMAGES} ảnh / Max {MAX_IMAGES} images</span>
+      <p className="mt-2 text-sm text-arena-mute">
+        {count}/{MAX_IMAGES} ảnh <span className="opacity-80">· tối đa {MAX_IMAGES} ảnh / Max {MAX_IMAGES} images</span>
       </p>
 
-      {error && <p className="text-xs text-[#D72638] mt-2">{error}</p>}
+      {error && <p role="alert" className="mt-2 text-sm text-alert-dark">{error}</p>}
     </div>
   )
 }

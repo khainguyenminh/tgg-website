@@ -5,7 +5,7 @@ import { ZaloIcon } from './ring/icons'
 const parentFacts = [
   'Scan 3D không đau, chỉ 10–15 phút, không cần lấy khuôn truyền thống.',
   'Làm theo hàm trên hiện tại của con, không có size chung.',
-  'Hỏi TGG về độ tuổi phù hợp và việc làm lại guard khi con thay răng.',
+  'Trẻ dùng được khi đã mọc đủ răng vĩnh viễn. Chưa chắc con đã đủ chưa? Hỏi TGG trước khi scan.',
 ]
 
 // Trên sàn đấu: chừa sẵn chỗ cho ảnh VĐV đeo guard và lời chứng thực thật
@@ -29,7 +29,7 @@ export default function Athletes() {
           <div>
             <h3 className="apron text-[clamp(2.75rem,6vw,5rem)]">Cho con bạn.</h3>
             <p className="mt-4 max-w-[28rem] text-lg leading-relaxed text-canvas-mute">
-              Phụ huynh của vận động viên nhỏ tuổi thường hỏi ba điều này trước.
+              Ba điều phụ huynh của vận động viên nhỏ tuổi nên biết trước khi đặt.
             </p>
           </div>
           <div>

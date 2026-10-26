@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import ColorPicker from './ColorPicker'
+import { CloseIcon } from '../ring/icons'
 import ImageUploader from './ImageUploader'
 import TextEditor from './TextEditor'
 import { LIGHT_COLORS, PRO_COLORS } from './constants'
@@ -25,15 +26,15 @@ interface ToolPanelProps {
   onSendToBack: (id: string) => void
 }
 
-function Section({ icon, titleVi, titleEn, children }: { icon: string; titleVi: string; titleEn: string; children: React.ReactNode }) {
+// Mỗi nhóm công cụ là một đoạn trên nền đen, ngăn bằng dây 3px, không đóng hộp
+function Section({ titleVi, titleEn, children }: { titleVi: string; titleEn: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#0F1F38] border border-white/10 rounded-xl p-4">
-      <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-        <span>{icon}</span>
-        {titleVi} <span className="text-[#94A3B8] font-normal text-xs">/ {titleEn}</span>
+    <section className="border-t-[3px] border-white/10 py-5 first:border-arena-ink">
+      <h3 className="placard mb-4 text-lg text-arena-ink">
+        {titleVi} <span className="text-sm normal-case text-arena-mute">/ {titleEn}</span>
       </h3>
       {children}
-    </div>
+    </section>
   )
 }
 
@@ -128,16 +129,16 @@ export default function ToolPanel({
   }
 
   return (
-    <div className="space-y-4 w-full lg:w-[280px] flex-shrink-0">
-      <Section icon="🎨" titleVi="Màu nền" titleEn="Background Color">
+    <div className="w-full flex-shrink-0 lg:w-[320px]">
+      <Section titleVi="Màu nền" titleEn="Background color">
         <ColorPicker colors={colors} value={state.backgroundColor} onChange={onBackgroundColor} />
       </Section>
 
-      <Section icon="🖼️" titleVi="Hình ảnh" titleEn="Image">
+      <Section titleVi="Hình ảnh" titleEn="Image">
         <ImageUploader count={state.images.length} onUpload={onUploadImage} />
 
         {state.images.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-3">
             {[...state.images]
               .sort((a, b) => state.layerOrder.indexOf(a.id) - state.layerOrder.indexOf(b.id))
               .map((img) => (
@@ -156,9 +157,11 @@ export default function ToolPanel({
                   <button
                     type="button"
                     onClick={() => onSelectImage(img.id)}
-                    className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
-                      state.selectedId === img.id ? 'border-[#1CA6DF]' : 'border-white/10'
-                    } ${dragOverId === img.id && draggedId !== img.id ? 'ring-2 ring-[#1CA6DF]' : ''} ${
+                    aria-label="Chọn ảnh / Select image"
+                    aria-pressed={state.selectedId === img.id}
+                    className={`block h-14 w-14 overflow-hidden rounded-[6px] transition-opacity ${
+                      state.selectedId === img.id ? 'outline outline-[3px] outline-offset-2 outline-corner' : ''
+                    } ${dragOverId === img.id && draggedId !== img.id ? 'outline outline-[3px] outline-offset-2 outline-arena-ink' : ''} ${
                       draggedId === img.id ? 'opacity-40' : ''
                     }`}
                   >
@@ -169,9 +172,12 @@ export default function ToolPanel({
                     type="button"
                     onClick={() => onRemoveImage(img.id)}
                     title="Xóa ảnh / Remove"
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#D72638] text-white text-xs flex items-center justify-center leading-none"
+                    aria-label="Xóa ảnh / Remove image"
+                    className="absolute -right-4 -top-4 flex h-11 w-11 items-center justify-center"
                   >
-                    ×
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-arena-ink text-arena">
+                      <CloseIcon className="h-4 w-4" />
+                    </span>
                   </button>
                 </div>
               ))}
@@ -179,13 +185,14 @@ export default function ToolPanel({
         )}
 
         {selectedImage && (
-          <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+          <div className="mt-5 space-y-4 border-t-[3px] border-white/10 pt-5">
             <div>
-              <label className="text-xs text-[#94A3B8] block mb-1">
-                Phóng to / thu nhỏ <span className="opacity-70">(Zoom)</span>
+              <label htmlFor="designer-zoom" className="field-label text-arena-mute">
+                Phóng to / thu nhỏ <span className="normal-case">(Zoom)</span>
               </label>
               <input
                 type="range"
+                id="designer-zoom"
                 min={10}
                 max={300}
                 value={Math.round((selectedImage.width / selectedImage.naturalWidth) * 100)}
@@ -197,21 +204,22 @@ export default function ToolPanel({
                     selectedImage.naturalHeight * scalePercent
                   )
                 }}
-                className="w-full accent-[#1CA6DF]"
+                className="w-full accent-corner"
               />
             </div>
 
             <div>
-              <label className="text-xs text-[#94A3B8] block mb-1">
-                Xoay / Rotate: {Math.round(selectedImage.rotation)}°
+              <label htmlFor="designer-rotate" className="field-label text-arena-mute">
+                Xoay / Rotate: <span className="tabular">{Math.round(selectedImage.rotation)}°</span>
               </label>
               <input
                 type="range"
+                id="designer-rotate"
                 min={-180}
                 max={180}
                 value={selectedImage.rotation}
                 onChange={(e) => onImageRotate(selectedImage.id, Number(e.target.value))}
-                className="w-full accent-[#1CA6DF]"
+                className="w-full accent-corner"
               />
             </div>
 
@@ -219,14 +227,14 @@ export default function ToolPanel({
               <button
                 type="button"
                 onClick={() => onImageCenter(selectedImage.id)}
-                className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold rounded-lg px-3 py-2 transition-all"
+                className="seg flex-1 !normal-case"
               >
                 Về giữa / Center
               </button>
               <button
                 type="button"
                 onClick={() => onImageCover(selectedImage.id)}
-                className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold rounded-lg px-3 py-2 transition-all"
+                className="seg flex-1 !normal-case"
               >
                 Tràn màn hình / Cover
               </button>
@@ -235,7 +243,7 @@ export default function ToolPanel({
         )}
       </Section>
 
-      <Section icon="✏️" titleVi={selectedText ? 'Sửa chữ' : 'Chữ'} titleEn={selectedText ? 'Edit Text' : 'Add Text'}>
+      <Section titleVi={selectedText ? 'Sửa chữ' : 'Chữ'} titleEn={selectedText ? 'Edit text' : 'Add text'}>
         <TextEditor
           editingText={selectedText}
           onAdd={onAddText}
@@ -245,19 +253,19 @@ export default function ToolPanel({
       </Section>
 
       {hasLayerSelection && (
-        <Section icon="📚" titleVi="Thứ tự lớp" titleEn="Layer Order">
+        <Section titleVi="Thứ tự lớp" titleEn="Layer order">
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => state.selectedId && onBringToFront(state.selectedId)}
-              className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold rounded-lg px-3 py-2 transition-all"
+              className="seg flex-1 !normal-case"
             >
               Lên trước cùng
             </button>
             <button
               type="button"
               onClick={() => state.selectedId && onSendToBack(state.selectedId)}
-              className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold rounded-lg px-3 py-2 transition-all"
+              className="seg flex-1 !normal-case"
             >
               Xuống dưới cùng
             </button>

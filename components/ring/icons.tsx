@@ -37,6 +37,32 @@ export function PlusIcon({ className = 'w-5 h-5' }: IconProps) {
   )
 }
 
+export function CloseIcon({ className = 'w-5 h-5' }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...stroke}>
+      <path d="M6 6l12 12" />
+      <path d="M18 6 6 18" />
+    </svg>
+  )
+}
+
+export function ChevronIcon({ className = 'w-5 h-5', direction = 'right' }: IconProps & { direction?: 'left' | 'right' | 'down' }) {
+  const d = { right: 'm9 5 7 7-7 7', left: 'm15 5-7 7 7 7', down: 'm5 9 7 7 7-7' }[direction]
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...stroke}>
+      <path d={d} />
+    </svg>
+  )
+}
+
+export function CheckIcon({ className = 'w-5 h-5' }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...stroke}>
+      <path d="m5 12.5 4.5 4.5L19 7.5" />
+    </svg>
+  )
+}
+
 export function CameraIcon({ className = 'w-5 h-5' }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true" {...stroke}>

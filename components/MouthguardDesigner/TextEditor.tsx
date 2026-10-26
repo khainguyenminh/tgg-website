@@ -55,18 +55,20 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
         value={text}
         onChange={(e) => handleField('text', e.target.value)}
         placeholder="Nhập chữ... / Enter text..."
-        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-base text-white placeholder:text-[#94A3B8] outline-none focus:border-[#1CA6DF]"
+        aria-label="Nội dung chữ / Text"
+        className="field-dark"
       />
 
       <div>
-        <label className="text-xs text-[#94A3B8] block mb-1">Font</label>
+        <label htmlFor="designer-font" className="field-label text-arena-mute">Font</label>
         <select
           value={fontFamily}
           onChange={(e) => handleField('fontFamily', e.target.value)}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-base text-white outline-none focus:border-[#1CA6DF]"
+          id="designer-font"
+          className="field-dark"
         >
           {FONT_OPTIONS.map((f) => (
-            <option key={f} value={f} className="bg-[#0F1F38]" style={{ fontFamily: f }}>
+            <option key={f} value={f} className="bg-arena" style={{ fontFamily: f }}>
               {f}
             </option>
           ))}
@@ -74,14 +76,15 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
       </div>
 
       <div>
-        <label className="text-xs text-[#94A3B8] block mb-1">Cỡ chữ / Size: {fontSize}px</label>
+        <label htmlFor="designer-size" className="field-label text-arena-mute">Cỡ chữ / Size: <span className="tabular">{fontSize}px</span></label>
         <input
           type="range"
           min={12}
           max={120}
+          id="designer-size"
           value={fontSize}
           onChange={(e) => handleField('fontSize', Number(e.target.value))}
-          className="w-full accent-[#1CA6DF]"
+          className="w-full accent-corner"
         />
       </div>
 
@@ -89,35 +92,42 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
         <button
           type="button"
           onClick={() => handleField('bold', !bold)}
-          className={`flex-1 rounded-lg px-3 py-2 text-sm font-bold border transition-all ${
-            bold ? 'bg-[#1CA6DF] border-[#1CA6DF] text-white' : 'bg-white/5 border-white/10 text-[#94A3B8]'
-          }`}
+          aria-pressed={bold}
+          aria-label="In đậm / Bold"
+          className="seg flex-1 !normal-case"
         >
           B
         </button>
         <button
           type="button"
           onClick={() => handleField('italic', !italic)}
-          className={`flex-1 rounded-lg px-3 py-2 text-sm italic border transition-all ${
-            italic ? 'bg-[#1CA6DF] border-[#1CA6DF] text-white' : 'bg-white/5 border-white/10 text-[#94A3B8]'
-          }`}
+          aria-pressed={italic}
+          aria-label="In nghiêng / Italic"
+          className="seg flex-1 !normal-case italic"
         >
           I
         </button>
       </div>
 
       <div>
-        <label className="text-xs text-[#94A3B8] block mb-1">Màu chữ / Text color</label>
-        <div className="flex items-center gap-2 flex-wrap">
+        <p className="field-label text-arena-mute">Màu chữ / Text color</p>
+        <div className="grid grid-cols-6 gap-2" role="radiogroup" aria-label="Màu chữ / Text color">
           {TEXT_PRESET_COLORS.map((hex) => (
             <button
               key={hex}
               type="button"
               onClick={() => handleField('fill', hex)}
-              className={`w-6 h-6 rounded-full border-2 ${
-                fill.toLowerCase() === hex.toLowerCase() ? 'border-white scale-110' : 'border-transparent'
-              }`}
-              style={{ backgroundColor: hex, boxShadow: '0 0 0 1px rgba(255,255,255,0.15) inset' }}
+              role="radio"
+              aria-checked={fill.toLowerCase() === hex.toLowerCase()}
+              aria-label={hex}
+              className="aspect-square min-h-11 rounded-[6px]"
+              style={{
+                backgroundColor: hex,
+                boxShadow:
+                  fill.toLowerCase() === hex.toLowerCase()
+                    ? '0 0 0 3px #0A0C0F, 0 0 0 6px #F2F4F5'
+                    : 'inset 0 0 0 1px rgb(255 255 255 / 0.18)',
+              }}
             />
           ))}
         </div>
@@ -127,7 +137,7 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
         <button
           type="button"
           onClick={onDelete}
-          className="w-full text-xs text-[#D72638] hover:bg-[#D72638]/10 border border-[#D72638]/30 rounded-lg px-3 py-2 transition-all"
+          className="seg w-full !border-alert-dark/50 !text-alert-dark hover:!border-alert-dark"
         >
           Xóa chữ này / Delete this text
         </button>
@@ -139,10 +149,10 @@ export default function TextEditor({ editingText, onAdd, onUpdate, onDelete }: T
             onAdd({ text, fontFamily, fontSize, fill, bold, italic })
             setText('')
           }}
-          className="w-full bg-[#1CA6DF] hover:bg-[#1590C2] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-sm rounded-lg px-4 py-2.5 transition-all leading-tight"
+          className="arena-pad w-full flex-col !gap-0 !border-[3px] !border-arena-ink/30"
         >
           <span className="block">Thêm vào thiết kế</span>
-          <span className="block text-xs font-normal opacity-80">Add to Design</span>
+          <span className="block text-sm normal-case opacity-75">Add to design</span>
         </button>
       )}
     </div>
