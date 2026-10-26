@@ -11,7 +11,7 @@ export const HOURS = 'T2–T7 · 8:00–17:30'
 export const NAV_LINKS = [
   { label: 'Sản phẩm', href: '/products' },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'Quy trình', href: '/#quy-trinh' },
+  { label: 'Quy trình', href: '/quy-trinh' },
   { label: 'Tự thiết kế', href: '/customize' },
   { label: 'FAQ', href: '/faq' },
 ]

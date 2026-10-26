@@ -1,8 +1,9 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { photo, type Photo } from '@/data/photos'
 import { ZALO_URL } from '@/lib/site'
 import PhotoSlot from './ring/PhotoSlot'
-import { ZaloIcon } from './ring/icons'
+import { ArrowIcon, ZaloIcon } from './ring/icons'
 
 type Step = {
   title: string
@@ -55,10 +56,15 @@ export default function HowItWorks() {
               Khai Nguyên Dental Lab lo phần kỹ thuật. Bạn chỉ cần nhắn tin, đi scan và chọn thiết kế.
             </p>
           </div>
-          <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad hidden self-end lg:inline-flex">
-            <ZaloIcon />
-            Nhắn Zalo để bắt đầu
-          </a>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 self-end">
+            <Link href="/quy-trinh" className="rope-link placard inline-flex min-h-11 items-center gap-2 text-lg text-arena-ink">
+              Xem chi tiết quy trình <ArrowIcon />
+            </Link>
+            <a href={ZALO_URL} target="_blank" rel="noopener noreferrer" className="corner-pad hidden lg:inline-flex">
+              <ZaloIcon />
+              Nhắn Zalo để bắt đầu
+            </a>
+          </div>
         </div>
 
         <ol className="mt-14 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:mt-16 lg:grid-cols-5 lg:gap-x-5">

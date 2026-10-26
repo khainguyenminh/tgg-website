@@ -8,7 +8,7 @@ import { FacebookIcon, InstagramIcon, TikTokIcon, ZaloIcon } from './ring/icons'
 const PAGES = [
   { label: 'Sản phẩm', href: '/products' },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'Quy trình', href: '/#quy-trinh' },
+  { label: 'Quy trình', href: '/quy-trinh' },
   { label: 'Tự thiết kế', href: '/customize' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Đặt hàng', href: '/order' },

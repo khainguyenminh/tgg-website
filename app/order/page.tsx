@@ -13,55 +13,10 @@ import { FACEBOOK_URL, INSTAGRAM_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Đặt hàng — The Guard Guy',
-  description: 'Năm bước từ tư vấn, scan 3D miễn phí, duyệt thiết kế, sản xuất 2–3 ngày đến giao hàng miễn phí toàn quốc. Không cần đặt cọc.',
+  description: 'Đặt mouthguard custom-fit online: điền form, TGG xác nhận và hẹn lịch scan 3D miễn phí. Không cần đặt cọc, ship miễn phí toàn quốc.',
 }
 
 // ── Dữ liệu ──────────────────────────────────────────────────────────────────
-
-const STEPS = [
-  {
-    title: 'Tư vấn và chọn sản phẩm',
-    desc: 'Liên hệ TGG qua Zalo, Instagram hoặc Facebook để được tư vấn dòng sản phẩm phù hợp (LIGHT hoặc PRO), gói thiết kế, và giải đáp mọi thắc mắc trước khi đặt.',
-    tag: null,
-  },
-  {
-    title: 'Scan 3D mẫu hàm',
-    desc: 'Lấy dữ liệu scan răng, có 2 lựa chọn tùy nơi bạn ở. Scan hoàn toàn miễn phí, không đau, chỉ mất 10–15 phút.',
-    tag: 'Miễn phí',
-  },
-  {
-    title: 'Duyệt thiết kế 2D',
-    desc: 'TGG gửi bản thiết kế 2D để bạn xem và góp ý. Sản xuất chỉ bắt đầu sau khi bạn xác nhận. Bước này chỉ áp dụng cho gói Custom Text và Fully Design.',
-    tag: 'Gói Custom',
-  },
-  {
-    title: 'Sản xuất',
-    desc: 'Sau khi chốt thiết kế (hoặc ngay sau scan với gói Base), TGG sản xuất riêng theo khuôn răng của bạn trong 2–3 ngày làm việc.',
-    tag: '2–3 ngày',
-  },
-  {
-    title: 'Giao hàng tận nhà',
-    desc: 'Sản phẩm hoàn thiện được đóng gói và ship tận nhà toàn quốc, miễn phí vận chuyển. Thời gian nhận hàng tùy đơn vị vận chuyển và địa chỉ.',
-    tag: 'Miễn phí ship',
-  },
-]
-
-const SCAN_OPTIONS = [
-  {
-    tag: 'Khuyến nghị',
-    title: 'Scan tại TGG',
-    subtitle: 'Dành cho khách TP.HCM',
-    lines: ['10/40 Xuân Diệu, P. Tân Sơn Nhất, Q. Tân Bình, TP.HCM', 'Cổng ngoài ghi: Khai Nguyên Dental Lab'],
-    note: 'Vui lòng đặt hẹn trước khi đến.',
-  },
-  {
-    tag: 'Khách tỉnh',
-    title: 'Scan tại nha khoa địa phương',
-    subtitle: 'Dành cho khách ngoài TP.HCM',
-    lines: ['Đến nha khoa có dịch vụ scan 3D intraoral tại địa phương', 'Gửi file scan về TGG để sản xuất'],
-    note: 'Chưa biết nha khoa nào? Nhắn TGG để được tư vấn địa chỉ gần nhất.',
-  },
-]
 
 const NOTES = [
   'Scan 3D tại TGG hoàn toàn miễn phí, không tính thêm phí dù chọn gói nào.',
@@ -78,66 +33,28 @@ export default function OrderPage() {
       <Navbar />
       <main>
         <PageHead
-          title="Đặt hàng trong 5 bước."
-          lede="Từ tư vấn đến nhận hàng tận nhà: chỉ 5 bước, không cần đặt cọc, không cần đến TP.HCM nếu bạn ở tỉnh."
+          title="Đặt hàng."
+          lede="Điền form, TGG xác nhận và hẹn lịch scan với bạn. Không cần đặt cọc, không cần đến TP.HCM nếu bạn ở tỉnh."
           photo={photo('case-box')}
         >
-          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-1">
-            {['Scan 10–15 phút', 'Sản xuất 2–3 ngày', 'Ship miễn phí toàn quốc'].map((p) => (
-              <li key={p} className="placard flex items-center gap-2 text-[0.95rem] text-arena-ink">
-                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-corner" />
+          {/* Tóm tắt 5 bước; chi tiết nằm ở trang Quy trình */}
+          <ol className="mt-8 flex flex-wrap gap-x-5 gap-y-2" aria-label="5 bước đặt hàng">
+            {['Tư vấn', 'Scan 3D', 'Duyệt thiết kế', 'Sản xuất', 'Nhận hàng'].map((p, i) => (
+              <li key={p} className="placard flex items-center gap-2 text-base text-arena-ink">
+                <span className="apron tabular text-xl leading-none text-corner">{i + 1}</span>
                 {p}
               </li>
             ))}
-          </ul>
-          <a href="#order-form" className="rope-link placard mt-10 inline-flex items-center gap-2 text-xl text-arena-ink">
-            Điền form đặt hàng <ArrowIcon className="h-5 w-5 rotate-90" />
-          </a>
-        </PageHead>
-
-        {/* Năm bước */}
-        <section aria-labelledby="steps-title" className="bg-arena py-24 md:py-32">
-          <div className="mx-auto max-w-[1400px] px-4 md:px-8">
-            <h2 id="steps-title" className="sr-only">Quy trình đặt hàng</h2>
-            <ol className="border-t-[3px] border-arena-ink">
-              {STEPS.map((step, i) => (
-                <li key={step.title} className="grid gap-4 border-b-[3px] border-white/10 py-10 sm:grid-cols-[5rem_1fr] sm:gap-8">
-                  <p className="apron tabular text-5xl leading-none text-corner" aria-hidden="true">{i + 1}</p>
-                  <div>
-                    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                      <h3 className="placard text-3xl text-arena-ink">{step.title}</h3>
-                      {step.tag && <span className="placard text-base text-corner">{step.tag}</span>}
-                    </div>
-                    <p className="mt-3 max-w-[44rem] text-lg leading-relaxed text-arena-mute">{step.desc}</p>
-
-                    {i === 1 && (
-                      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_3px_1fr]">
-                        {SCAN_OPTIONS.map((opt, j) => (
-                          <div key={opt.title} className="contents">
-                            {j === 1 && <span aria-hidden="true" className="rope rope-white hidden h-auto w-[3px] opacity-25 lg:block" />}
-                            <div>
-                              <p className="flex flex-wrap items-baseline gap-x-3">
-                                <span className="placard text-2xl text-arena-ink">{opt.title}</span>
-                                <span className="placard text-sm text-corner">{opt.tag}</span>
-                              </p>
-                              <p className="text-base text-arena-mute">{opt.subtitle}</p>
-                              <ul className="mt-4 space-y-1 text-base leading-relaxed text-arena-ink">
-                                {opt.lines.map((l) => (
-                                  <li key={l}>{l}</li>
-                                ))}
-                              </ul>
-                              <p className="mt-3 text-base text-arena-mute">{opt.note}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ol>
+          </ol>
+          <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+            <a href="#order-form" className="rope-link placard inline-flex min-h-11 items-center gap-2 text-xl text-arena-ink">
+              Điền form đặt hàng <ArrowIcon className="h-5 w-5 rotate-90" />
+            </a>
+            <Link href="/quy-trinh" className="rope-link placard inline-flex min-h-11 items-center gap-2 text-xl text-arena-mute hover:text-arena-ink">
+              Xem chi tiết quy trình <ArrowIcon className="h-5 w-5" />
+            </Link>
           </div>
-        </section>
+        </PageHead>
 
         {/* Form trên canvas */}
         <section id="order-form" aria-labelledby="form-title" className="on-canvas relative scroll-mt-16 bg-canvas py-24 text-canvas-ink md:py-32">
